@@ -2,9 +2,9 @@ namespace Final_Project__Home_run_derby_game;
 
 public class Batter
 {
-    public string name { get; set;}
-    public double power { get; set;}
-    public double contact { get; set;}
+    public string name { get; set; }
+    public double power { get; set; }
+    public double contact { get; set; }
 }
 
 class Program
@@ -21,23 +21,24 @@ class Program
             new Batter { name = "Shohei Ohtani", power = 70, contact = 80 },
             new Batter { name = "Bryce Harper", power = 65, contact = 85 },
         };
-       bool gameOver;
+       bool gameOver=false;
        double batterSelectionPower;
        double batterSelectionContact;
        
 
 //main game loop       
-while (true){
+while (gameOver!=true){
 //startup menu
         Console.WriteLine("Welcome to the home run derby!");
         Console.WriteLine("Select your batter! (1-5)");
-        foreach (Batter batter in batters)
-        {
+        Console.WriteLine(" ");
+
+        foreach (Batter batter in batters){
         Console.WriteLine (@$"{batter.name}  
 Power: {batter.power}
 Contact: {batter.contact}");
-Console.WriteLine(" ");
-       }
+Console.WriteLine(" ");}
+
 //accepting user input here
        string batterSelection =
        Console.ReadLine().Trim();
@@ -76,66 +77,94 @@ Console.WriteLine(" ");
 
 //Displaying the user's batter choice
 Console.WriteLine($"Player Selected: {batterSelection.ToString()}");
+Console.WriteLine(" ");
 //Console.WriteLine(batterSelectionPower.ToString());
 //Console.WriteLine(batterSelectionContact.ToString());
 
 
 //Now we're creating two random number generators for contact and power(distance).
+byte outCounter=0;
+double maxDistance=0;
+int homeRunCounter=0;
+
+
+while(outCounter<3){
 Random random = new Random();
 int contactGenerator = random.Next(2,11);
-int powerGenerator = random.Next(9,20);
+int powerGenerator = random.Next(3,8);
 bool contactMade;
-byte outCounter=0;
-int homeRunCounter=0;
+
 
 
 double contactOdds = batterSelectionContact*contactGenerator;
 
+Console.WriteLine(" ");
+Console.WriteLine("Press any key to swing");
+string swingOption=Console.ReadLine().Trim();
 
+
+if (swingOption!=null){
+    //Console.WriteLine($"{batterSelectionContact}x{contactGenerator}={contactOdds}");
 if (contactOdds>350){
     contactMade= true;
+    Console.WriteLine(" ");
     Console.WriteLine("Swung on and drilled...");
 }
 else {
     contactMade= false;
+    Console.WriteLine(" ");
     Console.WriteLine("Swung on and missed. He cannot be happy about that one.");
     outCounter++;
     Console.WriteLine($"That is out number {outCounter.ToString()}.");
+    Console.WriteLine($"Score: {homeRunCounter.ToString()}");
+    Console.WriteLine(" ");
 }
 
 
 
 if(contactMade==true){
-double powerOdds = (batterSelectionPower*powerGenerator/1.75);
+double powerOdds = (batterSelectionPower*powerGenerator);
 //Console.WriteLine($"{batterSelectionPower}x{powerGenerator}={powerOdds}");
 
 if (powerOdds>350){
     homeRunCounter++;
     Console.WriteLine("AND IT IS OUT OF HERE!");
-    Console.WriteLine($"Score: {homeRunCounter.ToString()}");
     Console.WriteLine($"That went {Math.Round(powerOdds, 2)} feet!");
         if(powerOdds>450){
             Console.WriteLine("Wow! That was an absolute nuke!");
         }
-    
+    Console.WriteLine(" ");    
+    Console.WriteLine($"Score: {homeRunCounter.ToString()}");
+    Console.WriteLine($"And there are still {outCounter.ToString()} outs.");
+    Console.WriteLine(" ");
+        if(powerOdds>maxDistance){
+            maxDistance=powerOdds;
+        }       
 }
 else if(powerOdds<350){
     Console.WriteLine("... and it dies out before the wall. That's an out.");
     outCounter++;
     Console.WriteLine($"That is out number {outCounter.ToString()}.");
+    Console.WriteLine($"Score: {homeRunCounter.ToString()}");
+}
+}
 }
 }
 
-break;
+if (outCounter>=3){
+Console.WriteLine(" ");
+Console.WriteLine(@$"Your score = {homeRunCounter}
+Longest home run= {maxDistance} feet!");
+Console.WriteLine(" ");
+}
 
 
-
-
-
-
-
-
-
+Console.WriteLine("Press Y to play again or any other key to exit.");
+Console.WriteLine(" ");
+string playAgain= Console.ReadLine().ToLower().Trim();
+if (playAgain != "y"){
+    break;
+}
+}
 }
     }
-}
