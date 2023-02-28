@@ -1,0 +1,141 @@
+namespace Final_Project__Home_run_derby_game;
+
+public class Batter
+{
+    public string name { get; set;}
+    public double power { get; set;}
+    public double contact { get; set;}
+}
+
+class Program
+{
+
+
+    static void Main(string[] args)
+    
+    {        Batter[] batters = new Batter[]
+        {
+            new Batter { name = "Aaron Judge", power = 95, contact = 55 },
+            new Batter { name = "Mike Trout", power = 75, contact = 75 },
+            new Batter { name = "Vladimir Guerrero Jr.", power = 90, contact = 60 },
+            new Batter { name = "Shohei Ohtani", power = 70, contact = 80 },
+            new Batter { name = "Bryce Harper", power = 65, contact = 85 },
+        };
+       bool gameOver;
+       double batterSelectionPower;
+       double batterSelectionContact;
+       
+
+//main game loop       
+while (true){
+//startup menu
+        Console.WriteLine("Welcome to the home run derby!");
+        Console.WriteLine("Select your batter! (1-5)");
+        foreach (Batter batter in batters)
+        {
+        Console.WriteLine (@$"{batter.name}  
+Power: {batter.power}
+Contact: {batter.contact}");
+Console.WriteLine(" ");
+       }
+//accepting user input here
+       string batterSelection =
+       Console.ReadLine().Trim();
+
+
+//user's selection choices    
+    if (batterSelection == "1"){
+        batterSelection= batters[0].name;
+        batterSelectionPower= batters[0].power;
+        batterSelectionContact=batters[0].contact;
+    }
+       else if (batterSelection == "2"){
+        batterSelection= batters[1].name;
+        batterSelectionPower= batters[1].power;
+        batterSelectionContact=batters[1].contact;
+    }
+       else if (batterSelection == "3"){
+        batterSelection= batters[2].name;
+        batterSelectionPower= batters[2].power;
+        batterSelectionContact=batters[2].contact;
+    }
+       else if (batterSelection == "4"){
+        batterSelection= batters[3].name;
+        batterSelectionPower= batters[3].power;
+        batterSelectionContact=batters[3].contact;
+    }
+       else if (batterSelection == "5"){
+        batterSelection= batters[4].name;
+        batterSelectionPower= batters[4].power;
+        batterSelectionContact= batters[4].contact;
+    }
+    else{
+        Console.WriteLine("Invalid Selection");
+        break;
+    }
+
+//Displaying the user's batter choice
+Console.WriteLine($"Player Selected: {batterSelection.ToString()}");
+//Console.WriteLine(batterSelectionPower.ToString());
+//Console.WriteLine(batterSelectionContact.ToString());
+
+
+//Now we're creating two random number generators for contact and power(distance).
+Random random = new Random();
+int contactGenerator = random.Next(2,11);
+int powerGenerator = random.Next(9,20);
+bool contactMade;
+byte outCounter=0;
+int homeRunCounter=0;
+
+
+double contactOdds = batterSelectionContact*contactGenerator;
+
+
+if (contactOdds>350){
+    contactMade= true;
+    Console.WriteLine("Swung on and drilled...");
+}
+else {
+    contactMade= false;
+    Console.WriteLine("Swung on and missed. He cannot be happy about that one.");
+    outCounter++;
+    Console.WriteLine($"That is out number {outCounter.ToString()}.");
+}
+
+
+
+if(contactMade==true){
+double powerOdds = (batterSelectionPower*powerGenerator/1.75);
+//Console.WriteLine($"{batterSelectionPower}x{powerGenerator}={powerOdds}");
+
+if (powerOdds>350){
+    homeRunCounter++;
+    Console.WriteLine("AND IT IS OUT OF HERE!");
+    Console.WriteLine($"Score: {homeRunCounter.ToString()}");
+    Console.WriteLine($"That went {Math.Round(powerOdds, 2)} feet!");
+        if(powerOdds>450){
+            Console.WriteLine("Wow! That was an absolute nuke!");
+        }
+    
+}
+else if(powerOdds<350){
+    Console.WriteLine("... and it dies out before the wall. That's an out.");
+    outCounter++;
+    Console.WriteLine($"That is out number {outCounter.ToString()}.");
+}
+}
+
+break;
+
+
+
+
+
+
+
+
+
+}
+    }
+}
