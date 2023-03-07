@@ -5,6 +5,8 @@ public class Batter
     public string name { get; set; }
     public double power { get; set; }
     public double contact { get; set; }
+    public double leftTendency{get; set; }
+    public double rightTendency{get; set; }
 }
 
 class Program
@@ -15,15 +17,17 @@ class Program
     
     {        Batter[] batters = new Batter[]
         {
-            new Batter { name = "Aaron Judge", power = 95, contact = 55 },
-            new Batter { name = "Mike Trout", power = 75, contact = 75 },
-            new Batter { name = "Vladimir Guerrero Jr.", power = 90, contact = 60 },
-            new Batter { name = "Shohei Ohtani", power = 70, contact = 80 },
-            new Batter { name = "Bryce Harper", power = 65, contact = 85 },
+            new Batter { name = "Aaron Judge", power = 95, contact = 55, leftTendency=33, rightTendency=33},
+            new Batter { name = "Mike Trout", power = 75, contact = 75, leftTendency=66, rightTendency=1 },
+            new Batter { name = "Vladimir Guerrero Jr.", power = 90, contact = 60, leftTendency=60, rightTendency=5},
+            new Batter { name = "Shohei Ohtani", power = 70, contact = 80, leftTendency=15, rightTendency=50},
+            new Batter { name = "Bryce Harper", power = 65, contact = 85, leftTendency=30, rightTendency=65 },
         };
        bool gameOver=false;
        double batterSelectionPower;
        double batterSelectionContact;
+       double batterSelectionLTendency;
+       double batterSelectionRTendency;
        
 
 //main game loop       
@@ -49,26 +53,36 @@ Console.WriteLine(" ");}
         batterSelection= batters[0].name;
         batterSelectionPower= batters[0].power;
         batterSelectionContact=batters[0].contact;
+        batterSelectionLTendency=batters[0].leftTendency;
+        batterSelectionRTendency=batters[0].rightTendency;
     }
        else if (batterSelection == "2"){
         batterSelection= batters[1].name;
         batterSelectionPower= batters[1].power;
         batterSelectionContact=batters[1].contact;
+        batterSelectionLTendency=batters[1].leftTendency;
+        batterSelectionRTendency=batters[1].rightTendency;
     }
        else if (batterSelection == "3"){
         batterSelection= batters[2].name;
         batterSelectionPower= batters[2].power;
         batterSelectionContact=batters[2].contact;
+        batterSelectionLTendency=batters[2].leftTendency;
+        batterSelectionRTendency=batters[2].rightTendency;
     }
        else if (batterSelection == "4"){
         batterSelection= batters[3].name;
         batterSelectionPower= batters[3].power;
         batterSelectionContact=batters[3].contact;
+        batterSelectionLTendency=batters[3].leftTendency;
+        batterSelectionRTendency=batters[3].rightTendency;
     }
        else if (batterSelection == "5"){
         batterSelection= batters[4].name;
         batterSelectionPower= batters[4].power;
         batterSelectionContact= batters[4].contact;
+        batterSelectionLTendency=batters[4].leftTendency;
+        batterSelectionRTendency=batters[4].rightTendency;
     }
     else{
         Console.WriteLine("Invalid Selection");
@@ -85,30 +99,74 @@ Console.WriteLine(" ");
 //Now we're creating two random number generators for contact and power(distance).
 byte outCounter=0;
 double maxDistance=0;
-int homeRunCounter=0;
-
+double homeRunCounter=0;
+double swingCount=0;
 
 while(outCounter<3){
 Random random = new Random();
-int contactGenerator = random.Next(2,11);
+int contactGenerator = random.Next(4,11);
 int powerGenerator = random.Next(3,8);
+int directionLGenerator = random.Next(1, 10);
+int directionRGenerator = random.Next(1, 10);
 bool contactMade;
 
-
-
 double contactOdds = batterSelectionContact*contactGenerator;
+
+//These dimensions are actually based on Rogers Center new dimensions
+
+int fenceDistanceL= 329;
+int fenceDistanceC= 400;
+int fenceDistanceR= 328;
+int fenceDistance;
+
+double directionLOdds= batterSelectionLTendency*directionLGenerator;
+double directionROdds= batterSelectionRTendency*directionRGenerator;
+
 
 Console.WriteLine(" ");
 Console.WriteLine("Press any key to swing");
 string swingOption=Console.ReadLine().Trim();
 
-
 if (swingOption!=null){
+    swingCount++;
+
+
+if (directionLOdds>=165 && directionROdds<165){
+    fenceDistance=fenceDistanceL;
+}
+else if (directionROdds>=165 && directionLOdds<165){
+    fenceDistance=fenceDistanceR;
+}
+else if (directionLOdds>=165 && directionROdds>=165){
+    if(directionLOdds>directionROdds){
+        fenceDistance=fenceDistanceL;
+    }
+    else if(directionLOdds<directionROdds){
+        fenceDistance=fenceDistanceR;
+    }
+    else{
+        fenceDistance=fenceDistanceC;
+    }
+}
+else{
+    fenceDistance=fenceDistanceC;
+}
+
+
     //Console.WriteLine($"{batterSelectionContact}x{contactGenerator}={contactOdds}");
 if (contactOdds>350){
     contactMade= true;
     Console.WriteLine(" ");
-    Console.WriteLine("Swung on and drilled...");
+    Console.Write("Swung on and drilled ");
+    if(fenceDistance==fenceDistanceC){
+        Console.WriteLine("to center field...");
+    }
+    if(fenceDistance==fenceDistanceL){
+        Console.WriteLine("to left field");
+    }
+    if(fenceDistance==fenceDistanceR){
+        Console.WriteLine("to right field");
+    }
 }
 else {
     contactMade= false;
@@ -125,8 +183,7 @@ else {
 if(contactMade==true){
 double powerOdds = (batterSelectionPower*powerGenerator);
 //Console.WriteLine($"{batterSelectionPower}x{powerGenerator}={powerOdds}");
-
-if (powerOdds>350){
+if (powerOdds>fenceDistance){
     homeRunCounter++;
     Console.WriteLine("AND IT IS OUT OF HERE!");
     Console.WriteLine($"That went {Math.Round(powerOdds, 2)} feet!");
@@ -141,7 +198,7 @@ if (powerOdds>350){
             maxDistance=powerOdds;
         }       
 }
-else if(powerOdds<350){
+else if(powerOdds<fenceDistance){
     Console.WriteLine("... and it dies out before the wall. That's an out.");
     outCounter++;
     Console.WriteLine($"That is out number {outCounter.ToString()}.");
@@ -151,10 +208,15 @@ else if(powerOdds<350){
 }
 }
 
+
+
 if (outCounter>=3){
+
 Console.WriteLine(" ");
-Console.WriteLine(@$"Your score = {homeRunCounter}
-Longest home run= {maxDistance} feet!");
+Console.WriteLine("Game over!");
+Console.WriteLine(@$"Your score = {homeRunCounter.ToString()}
+Batting average = {Math.Round(homeRunCounter/swingCount, 3)}
+Longest home run= {maxDistance.ToString()} feet!");
 Console.WriteLine(" ");
 }
 
@@ -163,6 +225,7 @@ Console.WriteLine("Press Y to play again or any other key to exit.");
 Console.WriteLine(" ");
 string playAgain= Console.ReadLine().ToLower().Trim();
 if (playAgain != "y"){
+    Console.WriteLine("Thanks for playing. Goodbye!");
     break;
 }
 }
