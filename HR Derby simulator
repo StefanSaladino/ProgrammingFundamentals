@@ -96,7 +96,7 @@ Console.WriteLine(" ");
 //Console.WriteLine(batterSelectionContact.ToString());
 
 
-//Now we're creating two random number generators for contact and power(distance).
+//Now we're creating random number generators for contact, power(distance), as well as two generators to determine direction.
 byte outCounter=0;
 double maxDistance=0;
 double homeRunCounter=0;
