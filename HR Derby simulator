@@ -99,9 +99,6 @@ Console.WriteLine(" ");
 //Console.WriteLine(batterSelectionPower.ToString());
 //Console.WriteLine(batterSelectionContact.ToString());
 
-
-//Now we're creating random number generators for power and contact that will vary depending on difficulty.
-//We are also creating random number generators to determine direction
 byte outCounter=0;
 double maxDistance=0;
 double homeRunCounter=0;
@@ -148,6 +145,8 @@ steps up to the plate, settles into the box, and you know he's looking to do som
 
 while(outCounter<3){
 
+//Now we're creating random number generators for power and contact that will vary depending on difficulty.
+//We are also creating random number generators to determine direction
 Random random = new Random();
 
 double contactGenerator = (random.Next(3,11)/userDifficulty);
