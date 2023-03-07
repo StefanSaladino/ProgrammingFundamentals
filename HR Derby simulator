@@ -192,7 +192,10 @@ if (powerOdds>fenceDistance){
         }
     Console.WriteLine(" ");    
     Console.WriteLine($"Score: {homeRunCounter.ToString()}");
-    Console.WriteLine($"And there are still {outCounter.ToString()} outs.");
+    if(outCounter==1){
+        Console.WriteLine($"And there is still only {outCounter.ToString()} out.");}
+    else{
+        Console.WriteLine($"And there are still {outCounter.ToString()} outs.");}
     Console.WriteLine(" ");
         if(powerOdds>maxDistance){
             maxDistance=powerOdds;
