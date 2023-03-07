@@ -23,6 +23,7 @@ class Program
             new Batter { name = "Shohei Ohtani", power = 70, contact = 80, leftTendency=15, rightTendency=50},
             new Batter { name = "Bryce Harper", power = 65, contact = 85, leftTendency=30, rightTendency=65 },
         };
+
        bool gameOver=false;
        double batterSelectionPower;
        double batterSelectionContact;
@@ -31,7 +32,7 @@ class Program
        
 
 //main game loop       
-while (gameOver!=true){
+while (!gameOver){
 //startup menu
         Console.WriteLine("Welcome to the home run derby!");
         Console.WriteLine("Select your batter! (1-5)");
@@ -89,6 +90,9 @@ Console.WriteLine(" ");}
         break;
     }
 
+
+
+
 //Displaying the user's batter choice
 Console.WriteLine($"Player Selected: {batterSelection.ToString()}");
 Console.WriteLine(" ");
@@ -96,21 +100,63 @@ Console.WriteLine(" ");
 //Console.WriteLine(batterSelectionContact.ToString());
 
 
-//Now we're creating random number generators for contact, power(distance), as well as two generators to determine direction.
+//Now we're creating random number generators for power and contact that will vary depending on difficulty.
+//We are also creating random number generators to determine direction
 byte outCounter=0;
 double maxDistance=0;
 double homeRunCounter=0;
 double swingCount=0;
 
+Console.WriteLine(@"Please select your desired difficulty level
+1= easy
+2= medium
+3= hard");
+
+double userDifficulty=0;
+string selectedDifficulty= 
+Console.ReadLine().Trim();
+
+switch(selectedDifficulty){
+case "1":{
+    userDifficulty=0.75;
+    Console.WriteLine("You have selected easy.");
+    break;
+}
+case "2":{
+    userDifficulty=1;
+    Console.WriteLine("You have selected medium.");
+    break;
+}
+case "3":{
+    userDifficulty=1.25;
+    Console.WriteLine("You have selected hard. Good luck with that buddy.");
+    break;
+}
+default: {
+    userDifficulty=0.75;
+    Console.WriteLine("Alright well since you can't follow basic instructions, we're just going to default the difficulty to EASY.");
+    break;
+}
+}
+
+Console.WriteLine(" ");
+Console.WriteLine(@$"Welcome to Rogers Center in Toronto. It's a great day for some baseball. {batterSelection.ToString()}
+steps up to the plate, settles into the box, and you know he's looking to do some damage.");
+
+
+
+
 while(outCounter<3){
+
 Random random = new Random();
-int contactGenerator = random.Next(4,11);
-int powerGenerator = random.Next(3,8);
-int directionLGenerator = random.Next(1, 10);
-int directionRGenerator = random.Next(1, 10);
+
+double contactGenerator = (random.Next(3,11)/userDifficulty);
+double powerGenerator = (random.Next(3, 8)/userDifficulty);
+int directionLGenerator = random.Next(1, 11);
+int directionRGenerator = random.Next(1, 11);
 bool contactMade;
 
-double contactOdds = batterSelectionContact*contactGenerator;
+double contactOdds= (batterSelectionContact*contactGenerator);;
 
 //These dimensions are actually based on Rogers Center new dimensions
 
@@ -162,10 +208,10 @@ if (contactOdds>350){
         Console.WriteLine("to center field...");
     }
     if(fenceDistance==fenceDistanceL){
-        Console.WriteLine("to left field");
+        Console.WriteLine("to left field...");
     }
     if(fenceDistance==fenceDistanceR){
-        Console.WriteLine("to right field");
+        Console.WriteLine("to right field...");
     }
 }
 else {
@@ -187,8 +233,11 @@ if (powerOdds>fenceDistance){
     homeRunCounter++;
     Console.WriteLine("AND IT IS OUT OF HERE!");
     Console.WriteLine($"That went {Math.Round(powerOdds, 2)} feet!");
-        if(powerOdds>450){
+        if(powerOdds>450 && powerOdds<550){
             Console.WriteLine("Wow! That was an absolute nuke!");
+        }
+        if(powerOdds>550){
+            Console.WriteLine("I don't think that's humanly possible. You may have a random drug test coming your way");
         }
     Console.WriteLine(" ");    
     Console.WriteLine($"Score: {homeRunCounter.ToString()}");
@@ -219,7 +268,7 @@ Console.WriteLine(" ");
 Console.WriteLine("Game over!");
 Console.WriteLine(@$"Your score = {homeRunCounter.ToString()}
 Batting average = {Math.Round(homeRunCounter/swingCount, 3)}
-Longest home run= {maxDistance.ToString()} feet!");
+Longest home run= {Math.Round(maxDistance, 2)} feet!");
 Console.WriteLine(" ");
 }
 
