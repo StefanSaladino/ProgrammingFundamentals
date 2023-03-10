@@ -73,13 +73,16 @@ static void Main(string[] args){
     /*now we're creating an array of fields. This won't be am array list because the user will not have the option
     to create their own field*/   
         ballpark[] parkArray= new ballpark[3];
-            parkArray[0]=(new ballpark("Rogers Center", "Toronto", 329, 328, 400));
-            parkArray[1]=(new ballpark("Dodger Stadium", "Los Angeles", 330, 375, 395));
-            parkArray[2]=(new ballpark("PNC Park", "Pittsburgh", 325, 320, 399));
+            parkArray[0]=(new ballpark
+            ("Rogers Center", "Toronto", 329, 328, 400));
 
-       bool gameOver=false;
-       
+            parkArray[1]=(new ballpark
+            ("Dodger Stadium", "Los Angeles", 330, 375, 395));
 
+            parkArray[2]=(new ballpark
+            ("PNC Park", "Pittsburgh", 325, 320, 399));
+
+bool gameOver=false;
 //main game loop       
 while (!gameOver){
 //startup menu
@@ -272,7 +275,7 @@ else{
         fieldIndex=randomFieldSelector;
 }
 
-ballpark selectedField= (ballpark)parkArray[fieldIndex-1];
+ballpark selectedField= (ballpark)parkArray[fieldIndex];
 string selectedFieldName=selectedField.name;
 string selectedFieldCity=selectedField.city;
 int selectedLeftField=selectedField.leftFieldDistance;
@@ -411,16 +414,190 @@ else if(powerOdds<fenceDistance){
 
 
 //game is over when user records 3 outs
-if (outCounter>=3){
+
 Console.WriteLine(" ");
-Console.WriteLine("Game over!");
+Console.WriteLine("Your stats:");
 Console.WriteLine(@$"Your score = {homeRunCounter.ToString()}
 Batting average = {Math.Round(homeRunCounter/swingCount, 3)}
 Longest home run= {Math.Round(maxDistance, 2)} feet!");
 Console.WriteLine(" ");
+
+
+int cpuOutCounter=0;
+
+Console.WriteLine("Computer's Turn!");
+Console.WriteLine(" ");
+
+Random cpuPlayerGenerator = new Random();
+int cpuPlayerSelector= (cpuPlayerGenerator.Next(1, batters.Count));
+
+Batter cpuBatter = (Batter)batters[cpuPlayerSelector];
+string cpuSelectionName=cpuBatter.name;
+double cpuSelectionPower=cpuBatter.power;
+double cpuSelectionContact=cpuBatter.contact;
+double cpuSelectionLT=cpuBatter.leftTendency;
+double cpuSelectionRT=cpuBatter.rightTendency;
+
+Console.WriteLine($@"Computer has selected: {cpuBatter.name}
+Power: {cpuBatter.power}
+Contact: {cpuBatter.contact}");
+Console.WriteLine(" ");
+Console.WriteLine($"And now here comes {cpuSelectionName} to the plate. He needs to beat {homeRunCounter} dingers to win.");
+Console.WriteLine(" ");
+
+int cpuHomeRunCounter=0;
+double cpuMaxDistance=0;
+double cpuSwingCount=0;
+while(cpuOutCounter<3){
+/*Now we're creating random number generators for power and contact that will vary depending on difficulty.
+We are also creating random number generators to determine direction*/
+Random random1 = new Random();
+
+//The following are the equations that decide the result of a user swing
+double cpuContactGenerator = (random1.Next(3,11)*userDifficulty);
+double cpuPowerGenerator = (random1.Next(3, 8)*userDifficulty);
+int cpuDirectionLGenerator = random1.Next(1, 11);
+int cpuDirectionRGenerator = random1.Next(1, 11);
+bool cpuContactMade;
+double cpuContactOdds= (cpuSelectionContact*cpuContactGenerator);
+double cpuPowerOdds = (cpuSelectionPower*cpuPowerGenerator);
+
+
+
+int fenceDistanceL= selectedField.leftFieldDistance;
+int fenceDistanceC= selectedField.centerFieldDistance;
+int fenceDistanceR= selectedField.rightFieldDistance;
+int fenceDistance;
+
+double cpuDirectionLOdds= cpuSelectionLT*cpuDirectionLGenerator;
+double cpuDirectionROdds= cpuSelectionRT*cpuDirectionRGenerator;
+
+//this will determine which direction the CPU hit the ball
+if (cpuDirectionLOdds>=165 && cpuDirectionROdds<165){
+    fenceDistance=fenceDistanceL;
+}
+else if (cpuDirectionROdds>=165 && cpuDirectionLOdds<165){
+    fenceDistance=fenceDistanceR;
+}
+else if (cpuDirectionLOdds>=165 && cpuDirectionROdds>=165){
+    if(cpuDirectionLOdds>cpuDirectionROdds){
+        fenceDistance=fenceDistanceL;
+    }
+    else if(cpuDirectionLOdds<cpuDirectionROdds){
+        fenceDistance=fenceDistanceR;
+    }
+    else{
+        fenceDistance=fenceDistanceC;
+    }
+}
+else{
+    fenceDistance=fenceDistanceC;
 }
 
 
+//if the contactOdds are over 350, the user made contact with the ball, otherwise it's an out
+if (cpuContactOdds>350){
+    cpuContactMade= true;
+    Console.WriteLine(" ");
+    Console.Write("Swung on and drilled ");
+    if(fenceDistance==fenceDistanceC){
+        Console.WriteLine("to center field...");
+    }
+    if(fenceDistance==fenceDistanceL){
+        Console.WriteLine("to left field...");
+    }
+    if(fenceDistance==fenceDistanceR){
+        Console.WriteLine("to right field...");
+    }
+    cpuSwingCount++;
+}
+else {
+    cpuContactMade= false;
+    Console.WriteLine(" ");
+    Console.WriteLine("Swung on and missed. He cannot be happy about that one.");
+    outCounter++;
+    Console.WriteLine($"That is out number {outCounter.ToString()}.");
+    Console.WriteLine($"Score: {homeRunCounter.ToString()}");
+    Console.WriteLine(" ");
+    cpuSwingCount++;
+}
+
+
+//Since the ball can only travel a distance if contact is made, distance only applies if the batter made contact
+if(cpuContactMade==true){
+//ball went over the fence if the power odds(distance) is more than the fence distance
+if (cpuPowerOdds>fenceDistance){
+    cpuHomeRunCounter++;
+    Console.WriteLine("AND IT IS OUT OF HERE!");
+    Console.WriteLine($"That went {Math.Round(cpuPowerOdds, 2)} feet!");
+
+    if(cpuPowerOdds>450 && cpuPowerOdds<550){
+        Console.WriteLine("Wow! That was an absolute nuke!");
+        }
+
+    if(cpuPowerOdds>550){
+        Console.WriteLine("I don't think that's humanly possible. You might have a random drug test coming your way.");
+        }
+
+    Console.WriteLine(" ");    
+    Console.WriteLine($"Score: {cpuHomeRunCounter.ToString()}");
+
+    if(cpuOutCounter==1){
+        Console.WriteLine($"And there is still only {cpuOutCounter.ToString()} out.");}
+    else{
+        Console.WriteLine($"And there are still {cpuOutCounter.ToString()} outs.");}
+
+    Console.WriteLine(" ");
+    //this is to track the user's longest home run
+    if(cpuPowerOdds>cpuMaxDistance){
+        cpuMaxDistance=cpuPowerOdds;}       
+}
+
+//the ball did not go far enough for a home run
+else if(cpuPowerOdds<fenceDistance){
+    Console.WriteLine("... and it dies out before the wall. That's an out.");
+    cpuOutCounter++;
+    Console.WriteLine($"That is out number {cpuOutCounter.ToString()}.");
+    Console.WriteLine($"Score: {cpuHomeRunCounter.ToString()}");
+}
+}
+}
+Console.WriteLine(" ");
+Console.WriteLine("CPU stats:");
+Console.WriteLine(@$"CPU score = {cpuHomeRunCounter.ToString()}
+Batting average = {Math.Round(cpuHomeRunCounter/cpuSwingCount, 3)}
+Longest home run= {Math.Round(cpuMaxDistance, 2)} feet!");
+Console.WriteLine(" ");
+
+
+Console.WriteLine("And that's the game!");
+Console.WriteLine(@$"And the final score is:
+(user){batterSelectionName}:{homeRunCounter}
+(computer){cpuSelectionName}: {cpuHomeRunCounter}");
+
+if(cpuHomeRunCounter==homeRunCounter){
+    Console.WriteLine(" ");
+    Console.WriteLine("Tie game!");
+}
+
+else if(cpuHomeRunCounter>homeRunCounter){
+    Console.WriteLine(" ");
+    Console.WriteLine("You lose!");
+}
+
+else if(cpuHomeRunCounter<homeRunCounter){
+    Console.WriteLine(" ");
+    Console.WriteLine("You Win!");
+}
+
+    
+
+    
+    
+
+
+
+Console.WriteLine(" ");
 Console.WriteLine("Press Y to play again or any other key to exit.");
 Console.WriteLine(" ");
 string playAgain= Console.ReadLine().ToLower().Trim();
