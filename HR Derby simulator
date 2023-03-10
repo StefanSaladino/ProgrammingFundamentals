@@ -1,104 +1,161 @@
+using System.Globalization;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
+using System.Security.AccessControl;
+using System.Collections;
+using System.Collections.Generic;
+
 namespace Final_Project__Home_run_derby_game;
 
-public class Batter
-{
-    public string name { get; set; }
-    public double power { get; set; }
-    public double contact { get; set; }
-    public double leftTendency{get; set; }
-    public double rightTendency{get; set; }
-}
+
+
+
+        
+
+   
+
+
+
 
 class Program
 {
 
+        class Batter{
+            public string name;
+            public double power;
+            public double contact;
+            public double leftTendency;
+            public double rightTendency;
 
-    static void Main(string[] args)
-    
-    {        Batter[] batters = new Batter[]
+        public Batter(string name, double power, double contact, double leftTendency, double rightTendency)
         {
-            new Batter { name = "Aaron Judge", power = 95, contact = 55, leftTendency=33, rightTendency=33},
-            new Batter { name = "Mike Trout", power = 75, contact = 75, leftTendency=66, rightTendency=1 },
-            new Batter { name = "Vladimir Guerrero Jr.", power = 90, contact = 60, leftTendency=60, rightTendency=5},
-            new Batter { name = "Shohei Ohtani", power = 70, contact = 80, leftTendency=15, rightTendency=50},
-            new Batter { name = "Bryce Harper", power = 65, contact = 85, leftTendency=30, rightTendency=65 },
-        };
+            this.name = name;
+            this.power = power;
+            this.contact = contact;
+            this.leftTendency = leftTendency;
+            this.rightTendency = rightTendency;
+        }
+        }
+    static void Main(string[] args){        
+        ArrayList batters = new ArrayList();
+        
+            batters.Add
+            (new Batter ("Aaron Judge", 95, 55, 33, 33));
+            batters.Add
+            (new Batter ("Mike Trout", 75, 75, 66, 1));
+            batters.Add
+            (new Batter ("Vladimir Guerrero Jr.", 90, 60, 60, 5));
+            batters.Add
+            (new Batter ("Shohei Ohtani",70, 80, 15, 50));
+            batters.Add
+            (new Batter ("Bryce Harper", 65, 85, 30, 65 ));
+                
+       
+        
+    
 
        bool gameOver=false;
-       double batterSelectionPower;
+       /*double batterSelectionPower;
        double batterSelectionContact;
        double batterSelectionLTendency;
-       double batterSelectionRTendency;
+       double batterSelectionRTendency;*/
        
 
 //main game loop       
 while (!gameOver){
 //startup menu
         Console.WriteLine("Welcome to the home run derby!");
-        Console.WriteLine("Select your batter! (1-5)");
-        Console.WriteLine(" ");
-
-        foreach (Batter batter in batters){
-        Console.WriteLine (@$"{batter.name}  
+        Console.WriteLine("Select a Batter or use 'add' to create your own batter!");
+foreach (Batter batter in batters){
+Console.WriteLine (@$"{batter.name}  
 Power: {batter.power}
 Contact: {batter.contact}");
 Console.WriteLine(" ");}
 
 //accepting user input here
-       string batterSelection =
-       Console.ReadLine().Trim();
+int index=0;
+string input = Console.ReadLine();
+if (input.ToLower() == "add"){
+ Console.WriteLine("Enter a custom batter in the format 'name,power,contact,Ltendency,Rtendency', or enter 'back' to return to the main menu:");
+            input = Console.ReadLine().Trim();
+
+            if (input == "back"||input=="BACK")
+            {
+                continue;
+            }
+
+            string[] parts = input.Split(',');
+            if (parts.Length != 5)
+            {
+                Console.WriteLine("Invalid input: must be in the format 'name, power, contact, Ltendency, Rtendency'");
+                Console.WriteLine(" ");
+                //The user will be returned to the main menu
+                continue;
+            }
+
+            string name = parts[0];
+            if (double.TryParse(parts[1], out double power) && double.TryParse(parts[2], out double contact)&& double.TryParse(parts[3], out double leftTendency) && double.TryParse(parts[4], out double rightTendency))
+            {
+                if (power >= 1.0 && power <= 99.0 && contact >= 1.0 && contact <= 99.0 && leftTendency+rightTendency>= 1.0 && leftTendency+rightTendency<= 99.0)
+                {
+                    batters.Add(new Batter(name, power, contact, leftTendency, rightTendency));
+                }
+                else
+                {  Console.WriteLine("Invalid input: power, contact, and tendencies must be between 1 and 99");
+                    continue;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid input: power and contact must be numeric values");
+                continue;
+            }
+
+        // Print out the contents of the list
+        Console.WriteLine("The list now contains:");
+        foreach (Batter batter in batters){
+        
+            Console.WriteLine($"{batter.name}: power= {batter.power}, contact= {batter.contact}");
+        }
+        continue;
+}
+        else if (!int.TryParse(input, out index)) {
+        Console.WriteLine("Invalid selection. Please enter a number or 'add'.");
+        continue;
+    }
+else if(index >= 0 && index < batters.Count+1){
+index= int.Parse(input)-1;
+
+}
+
+else{
+    Console.WriteLine("invalid selection");
+    continue;
+}
 
 
-//user's selection choices    
-    if (batterSelection == "1"){
-        batterSelection= batters[0].name;
-        batterSelectionPower= batters[0].power;
-        batterSelectionContact=batters[0].contact;
-        batterSelectionLTendency=batters[0].leftTendency;
-        batterSelectionRTendency=batters[0].rightTendency;
-    }
-       else if (batterSelection == "2"){
-        batterSelection= batters[1].name;
-        batterSelectionPower= batters[1].power;
-        batterSelectionContact=batters[1].contact;
-        batterSelectionLTendency=batters[1].leftTendency;
-        batterSelectionRTendency=batters[1].rightTendency;
-    }
-       else if (batterSelection == "3"){
-        batterSelection= batters[2].name;
-        batterSelectionPower= batters[2].power;
-        batterSelectionContact=batters[2].contact;
-        batterSelectionLTendency=batters[2].leftTendency;
-        batterSelectionRTendency=batters[2].rightTendency;
-    }
-       else if (batterSelection == "4"){
-        batterSelection= batters[3].name;
-        batterSelectionPower= batters[3].power;
-        batterSelectionContact=batters[3].contact;
-        batterSelectionLTendency=batters[3].leftTendency;
-        batterSelectionRTendency=batters[3].rightTendency;
-    }
-       else if (batterSelection == "5"){
-        batterSelection= batters[4].name;
-        batterSelectionPower= batters[4].power;
-        batterSelectionContact= batters[4].contact;
-        batterSelectionLTendency=batters[4].leftTendency;
-        batterSelectionRTendency=batters[4].rightTendency;
-    }
-    else{
-        Console.WriteLine("Invalid Selection");
-        break;
-    }
+Batter selectedBatter = (Batter)batters[index];
+string batterSelectionName=selectedBatter.name;
+double batterSelectionPower=selectedBatter.power;
+double batterSelectionContact=selectedBatter.contact;
+double batterSelectionLTendency=selectedBatter.leftTendency;
+double batterSelectionRTendency=selectedBatter.rightTendency;
+Console.WriteLine(" ");
+
 
 
 
 
 //Displaying the user's batter choice
-Console.WriteLine($"Player Selected: {batterSelection.ToString()}");
+Console.WriteLine($"Player Selected: {batterSelectionName.ToString()}");
 Console.WriteLine(" ");
+
 //Console.WriteLine(batterSelectionPower.ToString());
 //Console.WriteLine(batterSelectionContact.ToString());
 
+
+//Now we're creating random number generators for power and contact that will vary depending on difficulty.
+//We are also creating random number generators to determine direction
 byte outCounter=0;
 double maxDistance=0;
 double homeRunCounter=0;
@@ -137,7 +194,7 @@ default: {
 }
 
 Console.WriteLine(" ");
-Console.WriteLine(@$"Welcome to Rogers Center in Toronto. It's a great day for some baseball. {batterSelection.ToString()}
+Console.WriteLine(@$"Welcome to Rogers Center in Toronto. It's a great day for some baseball. {batterSelectionName.ToString()}
 steps up to the plate, settles into the box, and you know he's looking to do some damage.");
 
 
@@ -145,8 +202,6 @@ steps up to the plate, settles into the box, and you know he's looking to do som
 
 while(outCounter<3){
 
-//Now we're creating random number generators for power and contact that will vary depending on difficulty.
-//We are also creating random number generators to determine direction
 Random random = new Random();
 
 double contactGenerator = (random.Next(3,11)/userDifficulty);
@@ -236,7 +291,7 @@ if (powerOdds>fenceDistance){
             Console.WriteLine("Wow! That was an absolute nuke!");
         }
         if(powerOdds>550){
-            Console.WriteLine("I don't think that's humanly possible. You may have a random drug test coming your way");
+            Console.WriteLine("I don't think that's humanly possible. You might have a random drug test coming your way.");
         }
     Console.WriteLine(" ");    
     Console.WriteLine($"Score: {homeRunCounter.ToString()}");
@@ -280,5 +335,5 @@ if (playAgain != "y"){
     break;
 }
 }
-}
     }
+}
