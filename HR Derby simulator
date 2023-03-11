@@ -139,7 +139,7 @@ if (input.ToLower() == "add"){
                 }
                 //the created batter did not have values matching the specifications. User returned to menu
                 else
-                {  Console.WriteLine("Invalid input: power, contact, and tendencies must be between 1 and 99");
+                {  Console.WriteLine("Invalid input: power, contact, and tendencies must be between 1 and 99. Tendencies must also not exceed 99 when added.");
                     continue;
                 }
             }
@@ -164,7 +164,7 @@ else if (!int.TryParse(input, out index)) {
         Console.WriteLine(" ");
         continue;
     }
-else if(index >= 0 && index < batters.Count+1){
+else if(index > 0 && index < batters.Count+1){
         index= int.Parse(input)-1;
 }
 
@@ -266,7 +266,7 @@ if (!int.TryParse(fieldInput, out fieldIndex)) {
         fieldIndex=randomFieldSelector;
     }
 
-else if(fieldIndex >= 0 && fieldIndex < parkArray.Length+1){
+else if(fieldIndex > 0 && fieldIndex < parkArray.Length+1){
         fieldIndex= int.Parse(fieldInput)-1;
 }
 else{
@@ -290,14 +290,15 @@ steps up to the plate, settles into the box, and you know he's looking to do som
 
 
 
-//the user can keep taking swings until the out counter reaches 3
+//the cpu will now go through their turn automatically until they reach 3 outs
+//the math is similar to the user turn
+//the same format is followed as with the user turn but no prompt is needed to swing
 while(outCounter<3){
-/*Now we're creating random number generators for power and contact that will vary depending on difficulty.
-We are also creating random number generators to determine direction*/
+
 Random random = new Random();
 
-//The following are the equations that decide the result of a user swing
-double contactGenerator = (random.Next(3,11)/userDifficulty);
+
+double contactGenerator = (random.Next(3,10)/userDifficulty);
 double powerGenerator = (random.Next(3, 8)/userDifficulty);
 int directionLGenerator = random.Next(1, 11);
 int directionRGenerator = random.Next(1, 11);
@@ -305,7 +306,7 @@ bool contactMade;
 double contactOdds= (batterSelectionContact*contactGenerator);
 double powerOdds = (batterSelectionPower*powerGenerator);
 
-//These dimensions are actually based on Rogers Center new dimensions
+
 int fenceDistanceL= selectedField.leftFieldDistance;
 int fenceDistanceC= selectedField.centerFieldDistance;
 int fenceDistanceR= selectedField.rightFieldDistance;
@@ -449,11 +450,9 @@ int cpuHomeRunCounter=0;
 double cpuMaxDistance=0;
 double cpuSwingCount=0;
 while(cpuOutCounter<3){
-/*Now we're creating random number generators for power and contact that will vary depending on difficulty.
-We are also creating random number generators to determine direction*/
 Random random1 = new Random();
 
-//The following are the equations that decide the result of a user swing
+
 double cpuContactGenerator = (random1.Next(3,11)*userDifficulty);
 double cpuPowerGenerator = (random1.Next(3, 8)*userDifficulty);
 int cpuDirectionLGenerator = random1.Next(1, 11);
@@ -472,7 +471,7 @@ int fenceDistance;
 double cpuDirectionLOdds= cpuSelectionLT*cpuDirectionLGenerator;
 double cpuDirectionROdds= cpuSelectionRT*cpuDirectionRGenerator;
 
-//this will determine which direction the CPU hit the ball
+
 if (cpuDirectionLOdds>=165 && cpuDirectionROdds<165){
     fenceDistance=fenceDistanceL;
 }
@@ -494,8 +493,6 @@ else{
     fenceDistance=fenceDistanceC;
 }
 
-
-//if the contactOdds are over 350, the user made contact with the ball, otherwise it's an out
 if (cpuContactOdds>350){
     cpuContactMade= true;
     Console.WriteLine(" ");
@@ -523,19 +520,19 @@ else {
 }
 
 
-//Since the ball can only travel a distance if contact is made, distance only applies if the batter made contact
+
 if(cpuContactMade==true){
-//ball went over the fence if the power odds(distance) is more than the fence distance
-if (cpuPowerOdds>fenceDistance){
+
+    if (cpuPowerOdds>fenceDistance){
     cpuHomeRunCounter++;
     Console.WriteLine("AND IT IS OUT OF HERE!");
     Console.WriteLine($"That went {Math.Round(cpuPowerOdds, 2)} feet!");
 
-    if(cpuPowerOdds>450 && cpuPowerOdds<550){
+        if(cpuPowerOdds>450 && cpuPowerOdds<550){
         Console.WriteLine("Wow! That was an absolute nuke!");
         }
 
-    if(cpuPowerOdds>550){
+        if(cpuPowerOdds>550){
         Console.WriteLine("I don't think that's humanly possible. You might have a random drug test coming your way.");
         }
 
@@ -544,7 +541,7 @@ if (cpuPowerOdds>fenceDistance){
 
     if(cpuOutCounter==1){
         Console.WriteLine($"And there is still only {cpuOutCounter.ToString()} out.");}
-    else{
+        else{
         Console.WriteLine($"And there are still {cpuOutCounter.ToString()} outs.");}
 
     Console.WriteLine(" ");
@@ -562,6 +559,7 @@ else if(cpuPowerOdds<fenceDistance){
 }
 }
 }
+
 Console.WriteLine(" ");
 Console.WriteLine("CPU stats:");
 Console.WriteLine(@$"CPU score = {cpuHomeRunCounter.ToString()}
@@ -589,13 +587,7 @@ else if(cpuHomeRunCounter<homeRunCounter){
     Console.WriteLine(" ");
     Console.WriteLine("You Win!");
 }
-
     
-
-    
-    
-
-
 
 Console.WriteLine(" ");
 Console.WriteLine("Press Y to play again or any other key to exit.");
@@ -608,4 +600,3 @@ if (playAgain != "y"){
 }
 }
 }
-
