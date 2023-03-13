@@ -54,6 +54,18 @@ class Program
             this.rightFieldDistance = rightFieldDistance;
             this.centerFieldDistance = centerFieldDistance;
         }
+        }
+
+//creating a weather class
+        class weather{
+            public string type;
+            public string description;
+        
+        public weather(string type, string description){
+            this.type= type;
+            this.description= description;
+        }
+
     }
 static void Main(string[] args){    
     //array list of available batters. I'm using an array list here because the user will have an option to add a custom batter later on 
@@ -70,7 +82,7 @@ static void Main(string[] args){
             batters.Add(new Batter 
             ("Bryce Harper", 65, 85, 30, 65 ));
                 
-    /*now we're creating an array of fields. This won't be am array list because the user will not have the option
+    /*now we're creating an array of fields. This won't be an array list because the user will not have the option
     to create their own field*/   
         ballpark[] parkArray= new ballpark[3];
             parkArray[0]=(new ballpark
@@ -81,6 +93,18 @@ static void Main(string[] args){
 
             parkArray[2]=(new ballpark
             ("PNC Park", "Pittsburgh", 325, 320, 399));
+
+//array of weather options
+        weather[] weatherArray= new weather[3];
+            weatherArray[0]=(new weather
+            ("rainy", "It's starting to rain out there, but we're going to play ball anyways!"));
+
+             weatherArray[1]=(new weather
+            ("sunny", "It's a beautiful sunny day for some baseball. Hopefully the sun doesn't get in the batters' eyes out there!"));
+
+             weatherArray[2]=(new weather
+            ("overcast", "The sun is trying to peak through the clouds but it remains overcast out there."));
+
 
 bool gameOver=false;
 //main game loop       
@@ -174,7 +198,7 @@ else{
         continue;
 }
 
-
+//applying the selected batter's attributes
 Batter selectedBatter = (Batter)batters[index];
 string batterSelectionName=selectedBatter.name;
 double batterSelectionPower=selectedBatter.power;
@@ -206,7 +230,7 @@ Console.ReadLine().Trim();
 //the user difficulty variable will influence the math of the game to make it easier or harder
 switch(selectedDifficulty){
 case "1":{
-    userDifficulty=0.75;
+    userDifficulty=0.90;
     Console.WriteLine(" ");
     Console.WriteLine("You have selected easy.");
     Console.WriteLine(" ");
@@ -220,7 +244,7 @@ case "2":{
     break;
 }
 case "3":{
-    userDifficulty=1.25;
+    userDifficulty=1.10;
     Console.WriteLine(" ");
     Console.WriteLine("You have selected hard. Good luck with that buddy.");
     Console.WriteLine(" ");
@@ -231,7 +255,7 @@ case "back":{
             }
 
 default: {
-    userDifficulty=0.75;
+    userDifficulty=0.90;
     Console.WriteLine(" ");
     Console.WriteLine("Alright well since you can't follow basic instructions, we're just going to default the difficulty to EASY.");
      Console.WriteLine(" ");
@@ -243,7 +267,6 @@ default: {
 
 int k=1;
 int fieldIndex;
-
 
 Console.WriteLine("Select a field:");
 foreach(ballpark park in parkArray){
@@ -257,7 +280,7 @@ foreach(ballpark park in parkArray){
 Console.WriteLine("Or select any other key for a random field");
 
 Random randomField= new Random();
-int randomFieldSelector= (randomField.Next(1, 4));
+int randomFieldSelector= (randomField.Next(0, 3));
 
 string fieldInput=Console.ReadLine().Trim();
 if (!int.TryParse(fieldInput, out fieldIndex)) {
@@ -282,11 +305,18 @@ int selectedLeftField=selectedField.leftFieldDistance;
 int selectedRightField=selectedField.rightFieldDistance;
 int selectedCenterField=selectedField.centerFieldDistance;
 
+//weather will be applied at random
+Random randomWeather= new Random();
+int randomWeatherSelector= (randomWeather.Next(0, 3));
+
+weather weatherSelection= (weather)weatherArray[randomWeatherSelector];
+string selectedWeatherType= weatherSelection.type;
+string selectedWeatherDescription= weatherSelection.description;
+
 
 //we're ready to play
 Console.WriteLine(" ");
-Console.WriteLine($@"Welcome to {selectedFieldName} in {selectedFieldCity}. It's a great day for some baseball. {batterSelectionName.ToString()}
-steps up to the plate, settles into the box, and you know he's looking to do some damage.");
+Console.WriteLine($@"Welcome to {selectedFieldName} in {selectedFieldCity}. {selectedWeatherDescription} {batterSelectionName.ToString()} steps up to the plate, settles into the box, and you know he's looking to do some damage.");
 
 
 
@@ -298,14 +328,24 @@ while(outCounter<3){
 Random random = new Random();
 
 
-double contactGenerator = (random.Next(3,10)/userDifficulty);
-double powerGenerator = (random.Next(3, 8)/userDifficulty);
+double contactGenerator = (random.Next(300, 1001)/userDifficulty);
+double powerGenerator = (random.Next(2300, 4751)/userDifficulty);
 int directionLGenerator = random.Next(1, 11);
 int directionRGenerator = random.Next(1, 11);
 bool contactMade;
-double contactOdds= (batterSelectionContact*contactGenerator);
-double powerOdds = (batterSelectionPower*powerGenerator);
+double contactOdds= (batterSelectionContact*(contactGenerator/75));
+double powerOdds = (batterSelectionPower*(powerGenerator/800));
 
+//the weather will have an impact on the result of the at bat
+if(selectedWeatherType=="rainy"){
+    powerOdds=powerOdds-5;
+    contactOdds=contactOdds+5;
+}
+
+if(selectedWeatherType=="sunny"){
+    powerOdds=powerOdds+5;
+    contactOdds=contactOdds-5;
+}
 
 int fenceDistanceL= selectedField.leftFieldDistance;
 int fenceDistanceC= selectedField.centerFieldDistance;
@@ -346,8 +386,8 @@ else{
     fenceDistance=fenceDistanceC;
 }
 
-//if the contactOdds are over 350, the user made contact with the ball, otherwise it's an out
-if (contactOdds>350){
+//if the contactOdds are over 300, the user made contact with the ball, otherwise it's an out
+if (contactOdds>300){
     contactMade= true;
     Console.WriteLine(" ");
     Console.Write("Swung on and drilled ");
@@ -414,7 +454,7 @@ else if(powerOdds<fenceDistance){
 }
 
 
-//game is over when user records 3 outs
+//user turn is over when user records 3 outs
 
 Console.WriteLine(" ");
 Console.WriteLine("Your stats:");
@@ -450,18 +490,26 @@ int cpuHomeRunCounter=0;
 double cpuMaxDistance=0;
 double cpuSwingCount=0;
 while(cpuOutCounter<3){
+
 Random random1 = new Random();
+    double cpuContactGenerator = (random1.Next(300,1001)*userDifficulty);
+    double cpuPowerGenerator = (random1.Next(2300,4751)*userDifficulty);
+    int cpuDirectionLGenerator = random1.Next(1, 11);
+    int cpuDirectionRGenerator = random1.Next(1, 11);
 
-
-double cpuContactGenerator = (random1.Next(3,11)*userDifficulty);
-double cpuPowerGenerator = (random1.Next(3, 8)*userDifficulty);
-int cpuDirectionLGenerator = random1.Next(1, 11);
-int cpuDirectionRGenerator = random1.Next(1, 11);
 bool cpuContactMade;
-double cpuContactOdds= (cpuSelectionContact*cpuContactGenerator);
-double cpuPowerOdds = (cpuSelectionPower*cpuPowerGenerator);
+double cpuContactOdds= (cpuSelectionContact*(cpuContactGenerator/75));
+double cpuPowerOdds = (cpuSelectionPower*(cpuPowerGenerator/800));
 
+if(selectedWeatherType=="rainy"){
+    cpuPowerOdds=cpuPowerOdds-5;
+    cpuContactOdds=cpuContactOdds+5;
+}
 
+if(selectedWeatherType=="sunny"){
+    cpuPowerOdds=cpuPowerOdds+5;
+    cpuContactOdds=cpuContactOdds-5;
+}
 
 int fenceDistanceL= selectedField.leftFieldDistance;
 int fenceDistanceC= selectedField.centerFieldDistance;
@@ -470,7 +518,6 @@ int fenceDistance;
 
 double cpuDirectionLOdds= cpuSelectionLT*cpuDirectionLGenerator;
 double cpuDirectionROdds= cpuSelectionRT*cpuDirectionRGenerator;
-
 
 if (cpuDirectionLOdds>=165 && cpuDirectionROdds<165){
     fenceDistance=fenceDistanceL;
@@ -493,7 +540,10 @@ else{
     fenceDistance=fenceDistanceC;
 }
 
-if (cpuContactOdds>350){
+Console.WriteLine($"{cpuPowerOdds}");
+Console.WriteLine($"{fenceDistance}");
+
+if (cpuContactOdds>300){
     cpuContactMade= true;
     Console.WriteLine(" ");
     Console.Write("Swung on and drilled ");
@@ -512,7 +562,7 @@ else {
     cpuContactMade= false;
     Console.WriteLine(" ");
     Console.WriteLine("Swung on and missed. He cannot be happy about that one.");
-    outCounter++;
+    cpuOutCounter++;
     Console.WriteLine($"That is out number {outCounter.ToString()}.");
     Console.WriteLine($"Score: {homeRunCounter.ToString()}");
     Console.WriteLine(" ");
