@@ -540,9 +540,6 @@ else{
     fenceDistance=fenceDistanceC;
 }
 
-Console.WriteLine($"{cpuPowerOdds}");
-Console.WriteLine($"{fenceDistance}");
-
 if (cpuContactOdds>300){
     cpuContactMade= true;
     Console.WriteLine(" ");
