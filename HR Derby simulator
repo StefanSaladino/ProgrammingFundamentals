@@ -10,9 +10,9 @@ namespace Final_Project__Home_run_derby_game;
 
 
 
-        
 
-   
+
+
 
 
 
@@ -20,13 +20,14 @@ namespace Final_Project__Home_run_derby_game;
 class Program
 {
 
-//creating a constructor and initializing the class Batter
-        class Batter{
-            public string name;
-            public double power;
-            public double contact;
-            public double leftTendency;
-            public double rightTendency;
+    //creating a constructor and initializing the class Batter
+    class Batter
+    {
+        public string name;
+        public double power;
+        public double contact;
+        public double leftTendency;
+        public double rightTendency;
 
         public Batter(string name, double power, double contact, double leftTendency, double rightTendency)
         {
@@ -36,15 +37,16 @@ class Program
             this.leftTendency = leftTendency;
             this.rightTendency = rightTendency;
         }
-        }
+    }
 
-        //creating a class of fields
-        class ballpark{
-            public string name;
-            public string city;
-            public int leftFieldDistance;
-            public int rightFieldDistance;
-            public int centerFieldDistance;
+    //creating a class of fields
+    class ballpark
+    {
+        public string name;
+        public string city;
+        public int leftFieldDistance;
+        public int rightFieldDistance;
+        public int centerFieldDistance;
 
         public ballpark(string name, string city, int leftFieldDistance, int rightFieldDistance, int centerFieldDistance)
         {
@@ -54,596 +56,718 @@ class Program
             this.rightFieldDistance = rightFieldDistance;
             this.centerFieldDistance = centerFieldDistance;
         }
-        }
+    }
 
-//creating a weather class
-        class weather{
-            public string type;
-            public string description;
-        
-        public weather(string type, string description){
-            this.type= type;
-            this.description= description;
+    //creating a weather class
+    class weather
+    {
+        public string type;
+        public string description;
+
+        public weather(string type, string description)
+        {
+            this.type = type;
+            this.description = description;
         }
 
     }
-static void Main(string[] args){    
-    //array list of available batters. I'm using an array list here because the user will have an option to add a custom batter later on 
+    static void Main(string[] args)
+    {
+        //array list of available batters. I'm using an array list here because the user will have an option to add a custom batter later on 
         ArrayList batters = new ArrayList();
-        
-            batters.Add(new Batter 
-            ("Aaron Judge", 95, 55, 33, 33));
-            batters.Add(new Batter 
-            ("Mike Trout", 75, 75, 66, 1));
-            batters.Add(new Batter 
-            ("Vladimir Guerrero Jr.", 90, 60, 60, 5));
-            batters.Add(new Batter
-            ("Shohei Ohtani",70, 80, 15, 50));
-            batters.Add(new Batter 
-            ("Bryce Harper", 65, 85, 30, 65 ));
-                
-    /*now we're creating an array of fields. This won't be an array list because the user will not have the option
-    to create their own field*/   
-        ballpark[] parkArray= new ballpark[3];
-            parkArray[0]=(new ballpark
-            ("Rogers Center", "Toronto", 329, 328, 400));
 
-            parkArray[1]=(new ballpark
-            ("Dodger Stadium", "Los Angeles", 330, 375, 395));
+        batters.Add(new Batter
+        ("Aaron Judge", 95, 55, 33, 33));
+        batters.Add(new Batter
+        ("Mike Trout", 75, 75, 66, 1));
+        batters.Add(new Batter
+        ("Vladimir Guerrero Jr.", 90, 60, 60, 5));
+        batters.Add(new Batter
+        ("Shohei Ohtani", 70, 80, 15, 50));
+        batters.Add(new Batter
+        ("Bryce Harper", 65, 85, 30, 65));
 
-            parkArray[2]=(new ballpark
-            ("PNC Park", "Pittsburgh", 325, 320, 399));
+        /*now we're creating an array of fields. This won't be an array list because the user will not have the option
+        to create their own field*/
+        ballpark[] parkArray = new ballpark[3];
+        parkArray[0] = (new ballpark
+        ("Rogers Center", "Toronto", 329, 328, 400));
 
-//array of weather options
-        weather[] weatherArray= new weather[3];
-            weatherArray[0]=(new weather
-            ("rainy", "It's starting to rain out there, but we're going to play ball anyways!"));
+        parkArray[1] = (new ballpark
+        ("Dodger Stadium", "Los Angeles", 330, 375, 395));
 
-             weatherArray[1]=(new weather
-            ("sunny", "It's a beautiful sunny day for some baseball. Hopefully the sun doesn't get in the batters' eyes out there!"));
+        parkArray[2] = (new ballpark
+        ("PNC Park", "Pittsburgh", 325, 320, 399));
 
-             weatherArray[2]=(new weather
-            ("overcast", "The sun is trying to peak through the clouds but it remains overcast out there."));
+        //array of weather options
+        weather[] weatherArray = new weather[3];
+        weatherArray[0] = (new weather
+        ("rainy", "It's starting to rain out there, but we're going to play ball anyways!"));
+
+        weatherArray[1] = (new weather
+       ("sunny", "It's a beautiful sunny day for some baseball. Hopefully the sun doesn't get in the batters' eyes out there!"));
+
+        weatherArray[2] = (new weather
+       ("overcast", "The sun is trying to peak through the clouds but it remains overcast out there."));
 
 
-bool gameOver=false;
-//main game loop       
-while (!gameOver){
-//startup menu
-int j=0;
-Console.WriteLine("Welcome to the home run derby!");
-Console.WriteLine(" ");
-Console.WriteLine("Select a Batter or use 'add' to create your own batter!");
-Console.WriteLine(" ");
-//This foreach loop will iterate through each batter in the array list and tell the user which number to input to select their desired character
-foreach (Batter batter in batters){
-Console.WriteLine (@$"Select {j+1} for: {batter.name}  
-Power: {batter.power}
-Contact: {batter.contact}");
-Console.WriteLine(" ");
-j++;}
+        bool gameOver = false;
+        //main game loop       
+        while (!gameOver)
+        {
+            //startup menu
+            mainMenu(batters);
 
-//accepting user input here
-int index;
-string input = Console.ReadLine();
-if (input.ToLower() == "add"){
-    Console.WriteLine(" ");
-    Console.WriteLine("Enter a custom batter in the format 'name, power, contact, Ltendency, Rtendency', or enter 'back' to return to the main menu:");
-            input = Console.ReadLine().Trim();
-
-        if (input.ToLower() == "back")
+            //accepting user input here
+            int index = 0;
+            string input = Console.ReadLine();
+            if (input.ToLower() == "add")
             {
-                continue;
-            }
+                Console.WriteLine(" ");
+                Console.WriteLine("Enter a custom batter in the format 'name, power, contact, Ltendency, Rtendency', or enter 'back' to return to the main menu:");
+                input = Console.ReadLine().Trim();
 
-        //here I've created a string array of user input
-        //split(' , ') splits the elements wherever the user inputs a comma
-        string[] parts = input.Split(',');
-        //the array needs 5 elements or else the console will return the invalid message and return the user to the main menu
-        if (parts.Length != 5)
-            {
-                Console.WriteLine("Invalid input: must be in the format 'name, power, contact, Ltendency, Rtendency'");
+                if (input.ToLower() == "back")
+                {
+                    mainMenu(batters);
+                }
+
+                //here I've created a string array of user input
+                //split(' , ') splits the elements wherever the user inputs a comma
+                string[] parts = input.Split(',');
+
+                //the array needs 5 elements or else the console will return the invalid message and return the user to the main menu
+                if (parts.Length != 5)
+                {
+                    Console.WriteLine("Invalid input: must be in the format 'name, power, contact, Ltendency, Rtendency'");
+                    Console.WriteLine(" ");
+                    continue;
+                }
+
+                //element [0] will be the name of the new batter
+                //string value can be anything, so the name will just be whatever is before the first comma
+                string name = parts[0];
+
+                //we need to create a double value for our other four elements
+                //we will attempt to parse the remaining four user inputs to derive a double
+                if (double.TryParse(parts[1], out double power) && double.TryParse(parts[2], out double contact) && double.TryParse(parts[3], out double leftTendency) && double.TryParse(parts[4], out double rightTendency))
+                {
+                    //the batter will only be added if it fulfills these requirements
+                    //the math is dependent upon the batter attributes being between the specified values
+                    if (power >= 1.0 && power <= 99.0 && contact >= 1.0 && contact <= 99.0 && leftTendency + rightTendency >= 1.0 && leftTendency + rightTendency <= 99.0 && leftTendency >= 0 && rightTendency >= 0)
+                    {
+                        //requirements are fulfilled, batter will now be added
+                        batters.Add(new Batter(name, power, contact, leftTendency, rightTendency));
+                    }
+                    //the created batter did not have values matching the specifications. User returned to menu
+                    else
+                    {
+                        Console.WriteLine("Invalid input: power, contact, and tendencies must be between 1 and 99. Tendencies must also not exceed 99 when added.");
+                        Console.WriteLine();
+                        continue;
+                    }
+                }
+
+                //the user input for the last 4 elements were not able to parsed. User returned to main menu
+                else
+                {
+                    Console.WriteLine("Invalid input: power and contact must be numeric values");
+                    continue;
+                }
+
+                // Print out the contents of the list
+                Console.WriteLine(" ");
+                Console.WriteLine("New batter successfully created!");
+                for (int i = batters.Count - 1; i <= batters.Count - 1; i++)
+                {
+                    Console.WriteLine($"{name}: power= {power}, contact= {contact}");
+                }
                 Console.WriteLine(" ");
                 continue;
             }
-        //element [0] will be the name of the new batter
-        //string value can be anything, so the name will just be whatever is before the first comma
-        string name = parts[0];
 
-        //we need to create a double value for our other four elements
-        //we will attempt to parse the remaining four user inputs to derive a double
-        if (double.TryParse(parts[1], out double power) && double.TryParse(parts[2], out double contact)&& double.TryParse(parts[3], out double leftTendency) && double.TryParse(parts[4], out double rightTendency))
+            //user entered a character that did not correspond to a batter in the array list 
+            else if (!int.TryParse(input, out index))
             {
-                //the batter will only be added if it fulfills these requirements
-                //the math is dependent upon the batter attributes being between the specified values
-                if (power >= 1.0 && power <= 99.0 && contact >= 1.0 && contact <= 99.0 && leftTendency+rightTendency>= 1.0 && leftTendency+rightTendency<= 99.0)
-                {
-                    //requirements are fulfilled, batter will now be added
-                    batters.Add(new Batter(name, power, contact, leftTendency, rightTendency));
-                }
-                //the created batter did not have values matching the specifications. User returned to menu
-                else
-                {  Console.WriteLine("Invalid input: power, contact, and tendencies must be between 1 and 99. Tendencies must also not exceed 99 when added.");
-                    continue;
-                }
-            }
-        //the user input for the last 4 elements was not able to parsed. User returned to main menu
-        else
-            {
-                Console.WriteLine("Invalid input: power and contact must be numeric values");
+                Console.WriteLine("Invalid selection. Please enter a number or 'add'.");
+                Console.WriteLine(" ");
                 continue;
             }
 
-        // Print out the contents of the list
-        Console.WriteLine(" ");
-        Console.WriteLine("New batter successfully created!");
-        for(int i=batters.Count-1; i<=batters.Count-1; i++){
-            Console.WriteLine($"{name}: power= {power}, contact= {contact}");
-        }
-        Console.WriteLine(" ");
-        continue;
-}
-else if (!int.TryParse(input, out index)) {
-        Console.WriteLine("Invalid selection. Please enter a number or 'add'.");
-        Console.WriteLine(" ");
-        continue;
-    }
-else if(index > 0 && index < batters.Count+1){
-        index= int.Parse(input)-1;
-}
+            //appropriate input and it will now be processed
+            else if (index > 0 && index < batters.Count + 1)
+            {
+                index = int.Parse(input) - 1;
+            }
 
-else{
-        Console.WriteLine("invalid selection");
-        Console.WriteLine(" ");
-        continue;
-}
-
-//applying the selected batter's attributes
-Batter selectedBatter = (Batter)batters[index];
-string batterSelectionName=selectedBatter.name;
-double batterSelectionPower=selectedBatter.power;
-double batterSelectionContact=selectedBatter.contact;
-double batterSelectionLTendency=selectedBatter.leftTendency;
-double batterSelectionRTendency=selectedBatter.rightTendency;
-Console.WriteLine(" ");
-
-
-//Displaying the user's batter choice
-Console.WriteLine($"Player Selected: {batterSelectionName.ToString()}");
-Console.WriteLine(" ");
-
-byte outCounter=0;
-double maxDistance=0;
-double homeRunCounter=0;
-double swingCount=0;
-double userDifficulty=0;
-
-//prompting the user to input a difficulty level
-Console.WriteLine(@"Please select your desired difficulty level
-1= easy
-2= medium
-3= hard
-Or enter back to return to the main menu.");
-string selectedDifficulty= 
-Console.ReadLine().Trim();
-
-//the user difficulty variable will influence the math of the game to make it easier or harder
-switch(selectedDifficulty){
-case "1":{
-    userDifficulty=0.90;
-    Console.WriteLine(" ");
-    Console.WriteLine("You have selected easy.");
-    Console.WriteLine(" ");
-    break;
-}
-case "2":{
-    userDifficulty=1;
-    Console.WriteLine(" ");
-    Console.WriteLine("You have selected medium.");
-    Console.WriteLine(" ");
-    break;
-}
-case "3":{
-    userDifficulty=1.10;
-    Console.WriteLine(" ");
-    Console.WriteLine("You have selected hard. Good luck with that buddy.");
-    Console.WriteLine(" ");
-    break;
-}
-case "back":{
+            //user entered a number outside of the array list
+            else
+            {
+                Console.WriteLine("invalid selection");
+                Console.WriteLine(" ");
                 continue;
             }
 
-default: {
-    userDifficulty=0.90;
-    Console.WriteLine(" ");
-    Console.WriteLine("Alright well since you can't follow basic instructions, we're just going to default the difficulty to EASY.");
-     Console.WriteLine(" ");
-    break;
-}
-}
+            //applying the selected batter's attributes
+            Batter selectedBatter = (Batter)batters[index];
+            string batterSelectionName = selectedBatter.name;
+            double batterSelectionPower = selectedBatter.power;
+            double batterSelectionContact = selectedBatter.contact;
+            double batterSelectionLTendency = selectedBatter.leftTendency;
+            double batterSelectionRTendency = selectedBatter.rightTendency;
+            Console.WriteLine(" ");
 
-//and finally it's time to select the field you will be playing on
 
-int k=1;
-int fieldIndex;
+            //Displaying the user's batter choice
+            Console.WriteLine($"Player Selected: {batterSelectionName.ToString()}");
+            Console.WriteLine(" ");
 
-Console.WriteLine("Select a field:");
-foreach(ballpark park in parkArray){
-    Console.WriteLine(@$"Select {k} for {park.name} in {park.city}
+            //these variables are to keep track of stats/apply difficulty
+            byte outCounter = 0;
+            double maxDistance = 0;
+            double homeRunCounter = 0;
+            double swingCount = 0;
+            double userDifficulty = 0;
+
+            //prompting the user to input a difficulty level
+            difficultySelectorScreen(ref userDifficulty, batters);
+
+            //and finally it's time to select the field you will be playing on
+            //field selection will have an impact on the distance of the fence in L/C/R
+            int k = 1;
+            int fieldIndex;
+
+            Console.WriteLine("Select a field:");
+            foreach (ballpark park in parkArray)
+            {
+                Console.WriteLine(@$"Select {k} for {park.name} in {park.city}
     Left field distance= {park.leftFieldDistance}
     Center field distance= {park.centerFieldDistance}
     Right field distance= {park.rightFieldDistance}");
-    k++;
-    Console.WriteLine(" ");
-}
-Console.WriteLine("Or select any other key for a random field");
+                k++;
+                Console.WriteLine(" ");
+            }
+            Console.WriteLine("Or select any other key for a random field");
 
-Random randomField= new Random();
-int randomFieldSelector= (randomField.Next(0, 3));
+            //selecting a random field
+            Random randomField = new Random();
+            int randomFieldSelector = (randomField.Next(0, 3));
 
-string fieldInput=Console.ReadLine().Trim();
-if (!int.TryParse(fieldInput, out fieldIndex)) {
-        Console.WriteLine("Random field selected.");
-        Console.WriteLine(" ");
-        fieldIndex=randomFieldSelector;
-    }
+            string fieldInput = Console.ReadLine().Trim();
+            if (!int.TryParse(fieldInput, out fieldIndex))
+            {
+                Console.WriteLine("Random field selected.");
+                Console.WriteLine(" ");
+                fieldIndex = randomFieldSelector;
+            }
 
-else if(fieldIndex > 0 && fieldIndex < parkArray.Length+1){
-        fieldIndex= int.Parse(fieldInput)-1;
-}
-else{
-        Console.WriteLine("Random field selected");
-        Console.WriteLine(" ");
-        fieldIndex=randomFieldSelector;
-}
+            //taking the input and selecting the corresponding field
+            else if (fieldIndex > 0 && fieldIndex < parkArray.Length + 1)
+            {
+                fieldIndex = int.Parse(fieldInput) - 1;
+            }
+            else
+            {
+                Console.WriteLine("Random field selected");
+                Console.WriteLine(" ");
+                fieldIndex = randomFieldSelector;
+            }
 
-ballpark selectedField= (ballpark)parkArray[fieldIndex];
-string selectedFieldName=selectedField.name;
-string selectedFieldCity=selectedField.city;
-int selectedLeftField=selectedField.leftFieldDistance;
-int selectedRightField=selectedField.rightFieldDistance;
-int selectedCenterField=selectedField.centerFieldDistance;
+            //applying the fence distances of the ballpark
+            ballpark selectedField = (ballpark)parkArray[fieldIndex];
+            string selectedFieldName = selectedField.name;
+            string selectedFieldCity = selectedField.city;
+            int selectedLeftField = selectedField.leftFieldDistance;
+            int selectedRightField = selectedField.rightFieldDistance;
+            int selectedCenterField = selectedField.centerFieldDistance;
 
-//weather will be applied at random
-Random randomWeather= new Random();
-int randomWeatherSelector= (randomWeather.Next(0, 3));
+            //weather will be applied at random
+            Random randomWeather = new Random();
+            int randomWeatherSelector = (randomWeather.Next(0, 3));
 
-weather weatherSelection= (weather)weatherArray[randomWeatherSelector];
-string selectedWeatherType= weatherSelection.type;
-string selectedWeatherDescription= weatherSelection.description;
-
-
-//we're ready to play
-Console.WriteLine(" ");
-Console.WriteLine($@"Welcome to {selectedFieldName} in {selectedFieldCity}. {selectedWeatherDescription} {batterSelectionName.ToString()} steps up to the plate, settles into the box, and you know he's looking to do some damage.");
-
-
-
-//the cpu will now go through their turn automatically until they reach 3 outs
-//the math is similar to the user turn
-//the same format is followed as with the user turn but no prompt is needed to swing
-while(outCounter<3){
-
-Random random = new Random();
+            weather weatherSelection = (weather)weatherArray[randomWeatherSelector];
+            string selectedWeatherType = weatherSelection.type;
+            string selectedWeatherDescription = weatherSelection.description;
 
 
-double contactGenerator = (random.Next(300, 1001)/userDifficulty);
-double powerGenerator = (random.Next(2300, 4751)/userDifficulty);
-int directionLGenerator = random.Next(1, 11);
-int directionRGenerator = random.Next(1, 11);
-bool contactMade;
-double contactOdds= (batterSelectionContact*(contactGenerator/75));
-double powerOdds = (batterSelectionPower*(powerGenerator/800));
+            //we're ready to play
+            Console.WriteLine(" ");
+            Console.WriteLine($@"Welcome to {selectedFieldName} in {selectedFieldCity}. {selectedWeatherDescription} {batterSelectionName.ToString()} steps up to the plate, settles into the box, and you know he's looking to do some damage.");
 
-//the weather will have an impact on the result of the at bat
-if(selectedWeatherType=="rainy"){
-    powerOdds=powerOdds-5;
-    contactOdds=contactOdds+5;
-}
+            while (outCounter < 3)
+            {
 
-if(selectedWeatherType=="sunny"){
-    powerOdds=powerOdds+5;
-    contactOdds=contactOdds-5;
-}
+                Random random = new Random();
 
-int fenceDistanceL= selectedField.leftFieldDistance;
-int fenceDistanceC= selectedField.centerFieldDistance;
-int fenceDistanceR= selectedField.rightFieldDistance;
-int fenceDistance;
+                //randomly generating a number to determine contact, power, and direction
+                double contactGenerator = (random.Next(300, 1001) / userDifficulty);
+                double powerGenerator = (random.Next(2300, 4751) / userDifficulty);
+                int directionLGenerator = random.Next(1, 11);
+                int directionRGenerator = random.Next(1, 11);
+                bool contactMade = true;
+                double contactOdds = (batterSelectionContact * (contactGenerator / 75));
+                double powerOdds = (batterSelectionPower * (powerGenerator / 800));
 
-double directionLOdds= batterSelectionLTendency*directionLGenerator;
-double directionROdds= batterSelectionRTendency*directionRGenerator;
+                //the weather will have an impact on the result of the at bat
+                WeatherEffects(selectedWeatherType, ref contactOdds, ref powerOdds);
 
+                //applying the fence distances of the selected field
+                int fenceDistanceL = selectedField.leftFieldDistance;
+                int fenceDistanceC = selectedField.centerFieldDistance;
+                int fenceDistanceR = selectedField.rightFieldDistance;
+                int fenceDistance = 0;
 
-Console.WriteLine(" ");
-Console.WriteLine("Press any key to swing");
-string swingOption=Console.ReadLine().Trim();
-
-//press any key to swing
-if (swingOption!=null){
-    swingCount++;
-
-//this will determine which direction the ball was hit
-if (directionLOdds>=165 && directionROdds<165){
-    fenceDistance=fenceDistanceL;
-}
-else if (directionROdds>=165 && directionLOdds<165){
-    fenceDistance=fenceDistanceR;
-}
-else if (directionLOdds>=165 && directionROdds>=165){
-    if(directionLOdds>directionROdds){
-        fenceDistance=fenceDistanceL;
-    }
-    else if(directionLOdds<directionROdds){
-        fenceDistance=fenceDistanceR;
-    }
-    else{
-        fenceDistance=fenceDistanceC;
-    }
-}
-else{
-    fenceDistance=fenceDistanceC;
-}
-
-//if the contactOdds are over 300, the user made contact with the ball, otherwise it's an out
-if (contactOdds>300){
-    contactMade= true;
-    Console.WriteLine(" ");
-    Console.Write("Swung on and drilled ");
-    if(fenceDistance==fenceDistanceC){
-        Console.WriteLine("to center field...");
-    }
-    if(fenceDistance==fenceDistanceL){
-        Console.WriteLine("to left field...");
-    }
-    if(fenceDistance==fenceDistanceR){
-        Console.WriteLine("to right field...");
-    }
-}
-else {
-    contactMade= false;
-    Console.WriteLine(" ");
-    Console.WriteLine("Swung on and missed. He cannot be happy about that one.");
-    outCounter++;
-    Console.WriteLine($"That is out number {outCounter.ToString()}.");
-    Console.WriteLine($"Score: {homeRunCounter.ToString()}");
-    Console.WriteLine(" ");
-}
+                double directionLOdds = batterSelectionLTendency * directionLGenerator;
+                double directionROdds = batterSelectionRTendency * directionRGenerator;
 
 
-//Since the ball can only travel a distance if contact is made, distance only applies if the batter made contact
-if(contactMade==true){
-//ball went over the fence if the power odds(distance) is more than the fence distance
-if (powerOdds>fenceDistance){
-    homeRunCounter++;
-    Console.WriteLine("AND IT IS OUT OF HERE!");
-    Console.WriteLine($"That went {Math.Round(powerOdds, 2)} feet!");
+                Console.WriteLine(" ");
+                Console.WriteLine("Press any key to swing");
+                string swingOption = Console.ReadLine().Trim();
 
-    if(powerOdds>450 && powerOdds<550){
-        Console.WriteLine("Wow! That was an absolute nuke!");
-        }
+                //press any key to swing
+                if (swingOption != null)
+                {
+                    swingCount++;
 
-    if(powerOdds>550){
-        Console.WriteLine("I don't think that's humanly possible. You might have a random drug test coming your way.");
-        }
+                    //this will determine which direction the ball was hit
+                    UserHitDirectionCalculator(ref fenceDistance, fenceDistanceL, fenceDistanceC, fenceDistanceR, directionLOdds, directionROdds);
 
-    Console.WriteLine(" ");    
-    Console.WriteLine($"Score: {homeRunCounter.ToString()}");
-
-    if(outCounter==1){
-        Console.WriteLine($"And there is still only {outCounter.ToString()} out.");}
-    else{
-        Console.WriteLine($"And there are still {outCounter.ToString()} outs.");}
-
-    Console.WriteLine(" ");
-    //this is to track the user's longest home run
-    if(powerOdds>maxDistance){
-        maxDistance=powerOdds;}       
-}
-
-//the ball did not go far enough for a home run
-else if(powerOdds<fenceDistance){
-    Console.WriteLine("... and it dies out before the wall. That's an out.");
-    outCounter++;
-    Console.WriteLine($"That is out number {outCounter.ToString()}.");
-    Console.WriteLine($"Score: {homeRunCounter.ToString()}");
-}
-}
-}
-}
+                    //if the contactOdds are over 300, the user made contact with the ball, otherwise it's an out
+                    UserContactResults(ref contactMade, ref outCounter, contactOdds, fenceDistance, fenceDistanceC, fenceDistanceL, fenceDistanceR, homeRunCounter);
 
 
-//user turn is over when user records 3 outs
+                    //Since the ball can only travel a distance if contact is made, distance only applies if the batter made contact
+                    if (contactMade == true)
+                    {
+                        //ball went over the fence if the power odds(distance) is more than the fence distance
+                        if (powerOdds > fenceDistance)
+                        {
+                            homeRunCounter++;
+                            Console.WriteLine("AND IT IS OUT OF HERE!");
+                            Console.WriteLine($"That went {Math.Round(powerOdds, 2)} feet!");
 
-Console.WriteLine(" ");
-Console.WriteLine("Your stats:");
-Console.WriteLine(@$"Your score = {homeRunCounter.ToString()}
-Batting average = {Math.Round(homeRunCounter/swingCount, 3)}
+                            if (powerOdds > 450 && powerOdds < 550)
+                            {
+                                Console.WriteLine("Wow! That was an absolute nuke!");
+                            }
+
+                            if (powerOdds > 550)
+                            {
+                                Console.WriteLine("I don't think that's humanly possible. You might have a random drug test coming your way.");
+                            }
+
+                            Console.WriteLine(" ");
+                            Console.WriteLine($"Score: {homeRunCounter.ToString()}");
+
+                            if (outCounter == 1)
+                            {
+                                Console.WriteLine($"And there is still only {outCounter.ToString()} out.");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"And there are still {outCounter.ToString()} outs.");
+                            }
+
+                            Console.WriteLine(" ");
+                            //this is to track the user's longest home run
+                            if (powerOdds > maxDistance)
+                            {
+                                maxDistance = powerOdds;
+                            }
+                        }
+
+                        //the ball did not go far enough for a home run
+                        else if (powerOdds < fenceDistance)
+                        {
+                            Console.WriteLine("... and it dies out before the wall. That's an out.");
+                            outCounter++;
+                            Console.WriteLine($"That is out number {outCounter.ToString()}.");
+                            Console.WriteLine($"Score: {homeRunCounter.ToString()}");
+                        }
+                    }
+                }
+            }
+
+
+            //user turn is over when user records 3 outs
+
+            Console.WriteLine(" ");
+            Console.WriteLine("Your stats:");
+            Console.WriteLine(@$"Your score = {homeRunCounter.ToString()}
+Batting average = {Math.Round(homeRunCounter / swingCount, 3)}
 Longest home run= {Math.Round(maxDistance, 2)} feet!");
-Console.WriteLine(" ");
+            Console.WriteLine(" ");
 
 
-int cpuOutCounter=0;
+            byte cpuOutCounter = 0;
 
-Console.WriteLine("Computer's Turn!");
-Console.WriteLine(" ");
+            Console.WriteLine("Computer's Turn!");
+            Console.WriteLine(" ");
 
-Random cpuPlayerGenerator = new Random();
-int cpuPlayerSelector= (cpuPlayerGenerator.Next(1, batters.Count));
+            Random cpuPlayerGenerator = new Random();
+            int cpuPlayerSelector = (cpuPlayerGenerator.Next(1, batters.Count));
 
-Batter cpuBatter = (Batter)batters[cpuPlayerSelector];
-string cpuSelectionName=cpuBatter.name;
-double cpuSelectionPower=cpuBatter.power;
-double cpuSelectionContact=cpuBatter.contact;
-double cpuSelectionLT=cpuBatter.leftTendency;
-double cpuSelectionRT=cpuBatter.rightTendency;
+            Batter cpuBatter = (Batter)batters[cpuPlayerSelector];
+            string cpuSelectionName = cpuBatter.name;
+            double cpuSelectionPower = cpuBatter.power;
+            double cpuSelectionContact = cpuBatter.contact;
+            double cpuSelectionLT = cpuBatter.leftTendency;
+            double cpuSelectionRT = cpuBatter.rightTendency;
 
-Console.WriteLine($@"Computer has selected: {cpuBatter.name}
+            Console.WriteLine($@"Computer has selected: {cpuBatter.name}
 Power: {cpuBatter.power}
 Contact: {cpuBatter.contact}");
-Console.WriteLine(" ");
-Console.WriteLine($"And now here comes {cpuSelectionName} to the plate. He needs to beat {homeRunCounter} dingers to win.");
-Console.WriteLine(" ");
+            Console.WriteLine(" ");
+            Console.WriteLine($"And now here comes {cpuSelectionName} to the plate. He needs to beat {homeRunCounter} dingers to win.");
+            Console.WriteLine(" ");
 
-int cpuHomeRunCounter=0;
-double cpuMaxDistance=0;
-double cpuSwingCount=0;
-while(cpuOutCounter<3){
+            double cpuHomeRunCounter = 0;
+            double cpuMaxDistance = 0;
+            double cpuSwingCount = 0;
 
-Random random1 = new Random();
-    double cpuContactGenerator = (random1.Next(300,1001)*userDifficulty);
-    double cpuPowerGenerator = (random1.Next(2300,4751)*userDifficulty);
-    int cpuDirectionLGenerator = random1.Next(1, 11);
-    int cpuDirectionRGenerator = random1.Next(1, 11);
+            //the cpu will now go through their turn automatically until they reach 3 outs
+            //the math is similar to the user turn
+            //the same format is followed as with the user turn but no prompt is needed to swing
+            while (cpuOutCounter < 3)
+            {
+                Random random1 = new Random();
+                double cpuContactGenerator = (random1.Next(300, 1001) * userDifficulty);
+                double cpuPowerGenerator = (random1.Next(2300, 4751) * userDifficulty);
+                int cpuDirectionLGenerator = random1.Next(1, 11);
+                int cpuDirectionRGenerator = random1.Next(1, 11);
 
-bool cpuContactMade;
-double cpuContactOdds= (cpuSelectionContact*(cpuContactGenerator/75));
-double cpuPowerOdds = (cpuSelectionPower*(cpuPowerGenerator/800));
+                bool cpuContactMade = true;
+                double cpuContactOdds = (cpuSelectionContact * (cpuContactGenerator / 75));
+                double cpuPowerOdds = (cpuSelectionPower * (cpuPowerGenerator / 800));
 
-if(selectedWeatherType=="rainy"){
-    cpuPowerOdds=cpuPowerOdds-5;
-    cpuContactOdds=cpuContactOdds+5;
-}
+                if (selectedWeatherType == "rainy")
+                {
+                    cpuPowerOdds = cpuPowerOdds - 5;
+                    cpuContactOdds = cpuContactOdds + 5;
+                }
 
-if(selectedWeatherType=="sunny"){
-    cpuPowerOdds=cpuPowerOdds+5;
-    cpuContactOdds=cpuContactOdds-5;
-}
+                if (selectedWeatherType == "sunny")
+                {
+                    cpuPowerOdds = cpuPowerOdds + 5;
+                    cpuContactOdds = cpuContactOdds - 5;
+                }
 
-int fenceDistanceL= selectedField.leftFieldDistance;
-int fenceDistanceC= selectedField.centerFieldDistance;
-int fenceDistanceR= selectedField.rightFieldDistance;
-int fenceDistance;
+                int fenceDistanceL = selectedField.leftFieldDistance;
+                int fenceDistanceC = selectedField.centerFieldDistance;
+                int fenceDistanceR = selectedField.rightFieldDistance;
 
-double cpuDirectionLOdds= cpuSelectionLT*cpuDirectionLGenerator;
-double cpuDirectionROdds= cpuSelectionRT*cpuDirectionRGenerator;
 
-if (cpuDirectionLOdds>=165 && cpuDirectionROdds<165){
-    fenceDistance=fenceDistanceL;
-}
-else if (cpuDirectionROdds>=165 && cpuDirectionLOdds<165){
-    fenceDistance=fenceDistanceR;
-}
-else if (cpuDirectionLOdds>=165 && cpuDirectionROdds>=165){
-    if(cpuDirectionLOdds>cpuDirectionROdds){
-        fenceDistance=fenceDistanceL;
-    }
-    else if(cpuDirectionLOdds<cpuDirectionROdds){
-        fenceDistance=fenceDistanceR;
-    }
-    else{
-        fenceDistance=fenceDistanceC;
-    }
-}
-else{
-    fenceDistance=fenceDistanceC;
-}
+                double cpuDirectionLOdds = cpuSelectionLT * cpuDirectionLGenerator;
+                double cpuDirectionROdds = cpuSelectionRT * cpuDirectionRGenerator;
+                int fenceDistance = 0;
 
-if (cpuContactOdds>300){
-    cpuContactMade= true;
-    Console.WriteLine(" ");
-    Console.Write("Swung on and drilled ");
-    if(fenceDistance==fenceDistanceC){
-        Console.WriteLine("to center field...");
-    }
-    if(fenceDistance==fenceDistanceL){
-        Console.WriteLine("to left field...");
-    }
-    if(fenceDistance==fenceDistanceR){
-        Console.WriteLine("to right field...");
-    }
-    cpuSwingCount++;
-}
-else {
-    cpuContactMade= false;
-    Console.WriteLine(" ");
-    Console.WriteLine("Swung on and missed. He cannot be happy about that one.");
-    cpuOutCounter++;
-    Console.WriteLine($"That is out number {outCounter.ToString()}.");
-    Console.WriteLine($"Score: {homeRunCounter.ToString()}");
-    Console.WriteLine(" ");
-    cpuSwingCount++;
-}
+                CpuHitDirectionCalculator(ref fenceDistance, fenceDistanceL, fenceDistanceC, fenceDistanceR, cpuDirectionLOdds, cpuDirectionROdds);
+                CpuContactResults(ref cpuContactMade, ref cpuOutCounter, cpuContactOdds, fenceDistance, fenceDistanceC, fenceDistanceL, fenceDistanceR, cpuHomeRunCounter, ref cpuSwingCount);
 
 
 
-if(cpuContactMade==true){
 
-    if (cpuPowerOdds>fenceDistance){
-    cpuHomeRunCounter++;
-    Console.WriteLine("AND IT IS OUT OF HERE!");
-    Console.WriteLine($"That went {Math.Round(cpuPowerOdds, 2)} feet!");
+                if (cpuContactMade == true)
+                {
+                    if (cpuPowerOdds >= fenceDistance)
+                    {
+                        cpuHomeRunCounter++;
+                        Console.WriteLine("AND IT IS OUT OF HERE!");
+                        Console.WriteLine($"That went {Math.Round(cpuPowerOdds, 2)} feet!");
 
-        if(cpuPowerOdds>450 && cpuPowerOdds<550){
-        Console.WriteLine("Wow! That was an absolute nuke!");
-        }
+                        if (cpuPowerOdds > 450 && cpuPowerOdds < 550)
+                        {
+                            Console.WriteLine("Wow! That was an absolute nuke!");
+                        }
 
-        if(cpuPowerOdds>550){
-        Console.WriteLine("I don't think that's humanly possible. You might have a random drug test coming your way.");
-        }
+                        if (cpuPowerOdds > 550)
+                        {
+                            Console.WriteLine("I don't think that's humanly possible. You might have a random drug test coming your way.");
+                        }
 
-    Console.WriteLine(" ");    
-    Console.WriteLine($"Score: {cpuHomeRunCounter.ToString()}");
+                        Console.WriteLine(" ");
+                        Console.WriteLine($"Score: {cpuHomeRunCounter.ToString()}");
 
-    if(cpuOutCounter==1){
-        Console.WriteLine($"And there is still only {cpuOutCounter.ToString()} out.");}
-        else{
-        Console.WriteLine($"And there are still {cpuOutCounter.ToString()} outs.");}
+                        if (cpuOutCounter == 1)
+                        {
+                            Console.WriteLine($"And there is still only {cpuOutCounter.ToString()} out.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"And there are still {cpuOutCounter.ToString()} outs.");
+                        }
 
-    Console.WriteLine(" ");
-    //this is to track the user's longest home run
-    if(cpuPowerOdds>cpuMaxDistance){
-        cpuMaxDistance=cpuPowerOdds;}       
-}
+                        Console.WriteLine(" ");
+                        if (cpuPowerOdds > cpuMaxDistance)
+                        {
+                            cpuMaxDistance = cpuPowerOdds;
+                        }
+                    }
 
-//the ball did not go far enough for a home run
-else if(cpuPowerOdds<fenceDistance){
-    Console.WriteLine("... and it dies out before the wall. That's an out.");
-    cpuOutCounter++;
-    Console.WriteLine($"That is out number {cpuOutCounter.ToString()}.");
-    Console.WriteLine($"Score: {cpuHomeRunCounter.ToString()}");
-}
-}
-}
 
-Console.WriteLine(" ");
-Console.WriteLine("CPU stats:");
-Console.WriteLine(@$"CPU score = {cpuHomeRunCounter.ToString()}
-Batting average = {Math.Round(cpuHomeRunCounter/cpuSwingCount, 3)}
+                    else if (cpuPowerOdds < fenceDistance)
+                    {
+                        Console.WriteLine("... and it dies out before the wall. That's an out.");
+                        cpuOutCounter++;
+                        Console.WriteLine($"That is out number {cpuOutCounter.ToString()}.");
+                        Console.WriteLine($"Score: {cpuHomeRunCounter.ToString()}");
+                    }
+                }
+            }
+            //the cpu turn is over. The stats of the cpu are printed
+            Console.WriteLine(" ");
+            Console.WriteLine("CPU stats:");
+            Console.WriteLine(@$"CPU score = {cpuHomeRunCounter.ToString()}
+Batting average = {Math.Round(cpuHomeRunCounter / cpuSwingCount, 3)}
 Longest home run= {Math.Round(cpuMaxDistance, 2)} feet!");
-Console.WriteLine(" ");
+            Console.WriteLine(" ");
 
-
-Console.WriteLine("And that's the game!");
-Console.WriteLine(@$"And the final score is:
+            //declaring a winner
+            Console.WriteLine("And that's the game!");
+            Console.WriteLine(@$"And the final score is:
 (user){batterSelectionName}:{homeRunCounter}
 (computer){cpuSelectionName}: {cpuHomeRunCounter}");
 
-if(cpuHomeRunCounter==homeRunCounter){
-    Console.WriteLine(" ");
-    Console.WriteLine("Tie game!");
-}
+            if (cpuHomeRunCounter == homeRunCounter)
+            {
+                Console.WriteLine(" ");
+                Console.WriteLine("Tie game!");
+            }
 
-else if(cpuHomeRunCounter>homeRunCounter){
-    Console.WriteLine(" ");
-    Console.WriteLine("You lose!");
-}
+            else if (cpuHomeRunCounter > homeRunCounter)
+            {
+                Console.WriteLine(" ");
+                Console.WriteLine("You lose!");
+            }
 
-else if(cpuHomeRunCounter<homeRunCounter){
-    Console.WriteLine(" ");
-    Console.WriteLine("You Win!");
-}
-    
+            else if (cpuHomeRunCounter < homeRunCounter)
+            {
+                Console.WriteLine(" ");
+                Console.WriteLine("You Win!");
+            }
 
-Console.WriteLine(" ");
-Console.WriteLine("Press Y to play again or any other key to exit.");
-Console.WriteLine(" ");
-string playAgain= Console.ReadLine().ToLower().Trim();
-if (playAgain != "y"){
-    Console.WriteLine("Thanks for playing. Goodbye!");
-    gameOver=true;}
 
-}
-}
+            Console.WriteLine(" ");
+            Console.WriteLine("Press Y to play again or any other key to exit.");
+            Console.WriteLine(" ");
+            string playAgain = Console.ReadLine().ToLower().Trim();
+            if (playAgain != "y")
+            {
+                Console.WriteLine("Thanks for playing. Goodbye!");
+                gameOver = true;
+            }
+
+        }
+    }
+    private static void CpuHitDirectionCalculator(ref int fenceDistance, int fenceDistanceL, int fenceDistanceC, int fenceDistanceR, double cpuDirectionLOdds, double cpuDirectionROdds)
+    {
+
+        if (cpuDirectionLOdds >= 165 && cpuDirectionROdds < 165)
+        {
+            fenceDistance = fenceDistanceL;
+        }
+        else if (cpuDirectionROdds >= 165 && cpuDirectionLOdds < 165)
+        {
+            fenceDistance = fenceDistanceR;
+        }
+        else if (cpuDirectionLOdds >= 165 && cpuDirectionROdds >= 165)
+        {
+            if (cpuDirectionLOdds > cpuDirectionROdds)
+            {
+                fenceDistance = fenceDistanceL;
+            }
+            else if (cpuDirectionLOdds < cpuDirectionROdds)
+            {
+                fenceDistance = fenceDistanceR;
+            }
+            else
+            {
+                fenceDistance = fenceDistanceC;
+            }
+        }
+        else
+        {
+            fenceDistance = fenceDistanceC;
+        }
+    }
+    private static void UserHitDirectionCalculator(ref int fenceDistance, int fenceDistanceL, int fenceDistanceC, int fenceDistanceR, double directionLOdds, double directionROdds)
+    {
+        if (directionLOdds >= 165 && directionROdds < 165)
+        {
+            fenceDistance = fenceDistanceL;
+        }
+        else if (directionROdds >= 165 && directionLOdds < 165)
+        {
+            fenceDistance = fenceDistanceR;
+        }
+        else if (directionLOdds >= 165 && directionROdds >= 165)
+        {
+            if (directionLOdds > directionROdds)
+            {
+                fenceDistance = fenceDistanceL;
+            }
+            else if (directionLOdds < directionROdds)
+            {
+                fenceDistance = fenceDistanceR;
+            }
+            else
+            {
+                fenceDistance = fenceDistanceC;
+            }
+        }
+        else
+        {
+            fenceDistance = fenceDistanceC;
+        }
+    }
+    //prompting the user to input a difficulty level
+    private static void difficultySelectorScreen(ref double userDifficulty, ArrayList batters)
+    {
+        Console.WriteLine(@"Please select your desired difficulty level
+1= easy
+2= medium
+3= hard");
+        string selectedDifficulty =
+        Console.ReadLine().Trim();
+
+        //the user difficulty variable will influence the math of the game to make it easier or harder
+        switch (selectedDifficulty)
+        {
+
+            case "1":
+                {
+                    userDifficulty = 0.90;
+                    Console.WriteLine(" ");
+                    Console.WriteLine("You have selected easy.");
+                    Console.WriteLine(" ");
+                    break;
+                }
+
+            case "2":
+                {
+                    userDifficulty = 1;
+                    Console.WriteLine(" ");
+                    Console.WriteLine("You have selected medium.");
+                    Console.WriteLine(" ");
+                    break;
+                }
+
+            case "3":
+                {
+                    userDifficulty = 1.10;
+                    Console.WriteLine(" ");
+                    Console.WriteLine("You have selected hard. Good luck with that buddy.");
+                    Console.WriteLine(" ");
+                    break;
+                }
+
+            default:
+                {
+                    userDifficulty = 0.90;
+                    Console.WriteLine(" ");
+                    Console.WriteLine("Alright well since you can't follow basic instructions, we're just going to default the difficulty to EASY.");
+                    Console.WriteLine(" ");
+                    break;
+                }
+        }
+    }
+    private static void mainMenu(ArrayList batters)
+    {
+        int j = 0;
+        Console.WriteLine("Welcome to the home run derby!");
+        Console.WriteLine(" ");
+        Console.WriteLine("Select a Batter or use 'add' to create your own batter!");
+        Console.WriteLine(" ");
+        //This foreach loop will iterate through each batter in the array list and tell the user which number to input to select their desired character
+        foreach (Batter batter in batters)
+        {
+            Console.WriteLine(@$"Select {j + 1} for: {batter.name}  
+    Power: {batter.power}
+    Contact: {batter.contact}");
+            Console.WriteLine(" ");
+            j++;
+        }
+    }
+
+    private static void WeatherEffects(string selectedWeatherType, ref double contactOdds, ref double powerOdds)
+    {
+        if (selectedWeatherType == "rainy")
+        {
+            powerOdds = powerOdds - 5;
+            contactOdds = contactOdds + 5;
+        }
+
+        if (selectedWeatherType == "sunny")
+        {
+            powerOdds = powerOdds + 5;
+            contactOdds = contactOdds - 5;
+        }
+    }
+    private static void UserContactResults(ref bool contactMade, ref byte outCounter, double contactOdds, int fenceDistance, int fenceDistanceC, int fenceDistanceL, int fenceDistanceR, double homeRunCounter)
+    {
+        if (contactOdds > 300)
+        {
+            contactMade = true;
+            Console.WriteLine(" ");
+            Console.Write("Swung on and drilled ");
+            if (fenceDistance == fenceDistanceC)
+            {
+                Console.WriteLine("to center field...");
+            }
+            if (fenceDistance == fenceDistanceL)
+            {
+                Console.WriteLine("to left field...");
+            }
+            if (fenceDistance == fenceDistanceR)
+            {
+                Console.WriteLine("to right field...");
+            }
+        }
+        //this is a strike
+        else
+        {
+            contactMade = false;
+            outCounter++;
+            Console.WriteLine(" ");
+            Console.WriteLine("Swung on and missed. He cannot be happy about that one.");
+            Console.WriteLine($"That is out number {outCounter.ToString()}.");
+            Console.WriteLine($"Score: {homeRunCounter.ToString()}");
+            Console.WriteLine(" ");
+        }
+    }
+    private static void CpuContactResults(ref bool cpuContactMade, ref byte cpuOutCounter, double cpuContactOdds, int fenceDistance, int fenceDistanceC, int fenceDistanceL, int fenceDistanceR, double cpuHomeRunCounter, ref double cpuSwingCount)
+    {
+        if (cpuContactOdds > 300)
+        {
+            cpuContactMade = true;
+            cpuSwingCount++;
+            Console.WriteLine(" ");
+            Console.Write("Swung on and drilled ");
+            if (fenceDistance == fenceDistanceC)
+            {
+                Console.WriteLine("to center field...");
+            }
+            if (fenceDistance == fenceDistanceL)
+            {
+                Console.WriteLine("to left field...");
+            }
+            if (fenceDistance == fenceDistanceR)
+            {
+                Console.WriteLine("to right field...");
+            }
+        }
+        else
+        {
+            cpuContactMade = false;
+            cpuOutCounter++;
+            cpuSwingCount++;
+            Console.WriteLine(" ");
+            Console.WriteLine("Swung on and missed. He cannot be happy about that one.");
+            Console.WriteLine($"That is out number {cpuOutCounter.ToString()}.");
+            Console.WriteLine($"Score: {cpuHomeRunCounter.ToString()}");
+            Console.WriteLine(" ");
+
+        }
+    }
 }
