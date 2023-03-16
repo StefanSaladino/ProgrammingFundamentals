@@ -328,63 +328,17 @@ class Program
                 //press any key to swing
                 if (swingOption != null)
                 {
-                    swingCount++;
 
                     //this will determine which direction the ball was hit
-                    UserHitDirectionCalculator(ref fenceDistance, fenceDistanceL, fenceDistanceC, fenceDistanceR, directionLOdds, directionROdds);
+                    HitDirectionCalculator(ref fenceDistance, fenceDistanceL, fenceDistanceC, fenceDistanceR, directionLOdds, directionROdds);
 
                     //if the contactOdds are over 300, the user made contact with the ball, otherwise it's an out
-                    UserContactResults(ref contactMade, ref outCounter, contactOdds, fenceDistance, fenceDistanceC, fenceDistanceL, fenceDistanceR, homeRunCounter);
-
+                    ContactResults(ref contactMade, ref outCounter, contactOdds, fenceDistance, fenceDistanceC, fenceDistanceL, fenceDistanceR, homeRunCounter, ref swingCount);
 
                     //Since the ball can only travel a distance if contact is made, distance only applies if the batter made contact
                     if (contactMade == true)
                     {
-                        //ball went over the fence if the power odds(distance) is more than the fence distance
-                        if (powerOdds > fenceDistance)
-                        {
-                            homeRunCounter++;
-                            Console.WriteLine("AND IT IS OUT OF HERE!");
-                            Console.WriteLine($"That went {Math.Round(powerOdds, 2)} feet!");
-
-                            if (powerOdds > 450 && powerOdds < 550)
-                            {
-                                Console.WriteLine("Wow! That was an absolute nuke!");
-                            }
-
-                            if (powerOdds > 550)
-                            {
-                                Console.WriteLine("I don't think that's humanly possible. You might have a random drug test coming your way.");
-                            }
-
-                            Console.WriteLine(" ");
-                            Console.WriteLine($"Score: {homeRunCounter.ToString()}");
-
-                            if (outCounter == 1)
-                            {
-                                Console.WriteLine($"And there is still only {outCounter.ToString()} out.");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"And there are still {outCounter.ToString()} outs.");
-                            }
-
-                            Console.WriteLine(" ");
-                            //this is to track the user's longest home run
-                            if (powerOdds > maxDistance)
-                            {
-                                maxDistance = powerOdds;
-                            }
-                        }
-
-                        //the ball did not go far enough for a home run
-                        else if (powerOdds < fenceDistance)
-                        {
-                            Console.WriteLine("... and it dies out before the wall. That's an out.");
-                            outCounter++;
-                            Console.WriteLine($"That is out number {outCounter.ToString()}.");
-                            Console.WriteLine($"Score: {homeRunCounter.ToString()}");
-                        }
+                        DistanceCalculator(powerOdds, fenceDistance, ref homeRunCounter, ref outCounter, ref maxDistance);
                     }
                 }
             }
@@ -441,17 +395,7 @@ Contact: {cpuBatter.contact}");
                 double cpuContactOdds = (cpuSelectionContact * (cpuContactGenerator / 75));
                 double cpuPowerOdds = (cpuSelectionPower * (cpuPowerGenerator / 800));
 
-                if (selectedWeatherType == "rainy")
-                {
-                    cpuPowerOdds = cpuPowerOdds - 5;
-                    cpuContactOdds = cpuContactOdds + 5;
-                }
-
-                if (selectedWeatherType == "sunny")
-                {
-                    cpuPowerOdds = cpuPowerOdds + 5;
-                    cpuContactOdds = cpuContactOdds - 5;
-                }
+                WeatherEffects(selectedWeatherType, ref cpuContactOdds, ref cpuPowerOdds);
 
                 int fenceDistanceL = selectedField.leftFieldDistance;
                 int fenceDistanceC = selectedField.centerFieldDistance;
@@ -462,58 +406,13 @@ Contact: {cpuBatter.contact}");
                 double cpuDirectionROdds = cpuSelectionRT * cpuDirectionRGenerator;
                 int fenceDistance = 0;
 
-                CpuHitDirectionCalculator(ref fenceDistance, fenceDistanceL, fenceDistanceC, fenceDistanceR, cpuDirectionLOdds, cpuDirectionROdds);
-                CpuContactResults(ref cpuContactMade, ref cpuOutCounter, cpuContactOdds, fenceDistance, fenceDistanceC, fenceDistanceL, fenceDistanceR, cpuHomeRunCounter, ref cpuSwingCount);
-
-
-
-
+                HitDirectionCalculator(ref fenceDistance, fenceDistanceL, fenceDistanceC, fenceDistanceR, cpuDirectionLOdds, cpuDirectionROdds);
+                ContactResults(ref cpuContactMade, ref cpuOutCounter, cpuContactOdds, fenceDistance, fenceDistanceC, fenceDistanceL, fenceDistanceR, cpuHomeRunCounter, ref cpuSwingCount);
                 if (cpuContactMade == true)
                 {
-                    if (cpuPowerOdds >= fenceDistance)
-                    {
-                        cpuHomeRunCounter++;
-                        Console.WriteLine("AND IT IS OUT OF HERE!");
-                        Console.WriteLine($"That went {Math.Round(cpuPowerOdds, 2)} feet!");
-
-                        if (cpuPowerOdds > 450 && cpuPowerOdds < 550)
-                        {
-                            Console.WriteLine("Wow! That was an absolute nuke!");
-                        }
-
-                        if (cpuPowerOdds > 550)
-                        {
-                            Console.WriteLine("I don't think that's humanly possible. You might have a random drug test coming your way.");
-                        }
-
-                        Console.WriteLine(" ");
-                        Console.WriteLine($"Score: {cpuHomeRunCounter.ToString()}");
-
-                        if (cpuOutCounter == 1)
-                        {
-                            Console.WriteLine($"And there is still only {cpuOutCounter.ToString()} out.");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"And there are still {cpuOutCounter.ToString()} outs.");
-                        }
-
-                        Console.WriteLine(" ");
-                        if (cpuPowerOdds > cpuMaxDistance)
-                        {
-                            cpuMaxDistance = cpuPowerOdds;
-                        }
-                    }
-
-
-                    else if (cpuPowerOdds < fenceDistance)
-                    {
-                        Console.WriteLine("... and it dies out before the wall. That's an out.");
-                        cpuOutCounter++;
-                        Console.WriteLine($"That is out number {cpuOutCounter.ToString()}.");
-                        Console.WriteLine($"Score: {cpuHomeRunCounter.ToString()}");
-                    }
+                    DistanceCalculator(cpuPowerOdds, fenceDistance, ref cpuHomeRunCounter, ref cpuOutCounter, ref cpuMaxDistance);
                 }
+
             }
             //the cpu turn is over. The stats of the cpu are printed
             Console.WriteLine(" ");
@@ -560,54 +459,24 @@ Longest home run= {Math.Round(cpuMaxDistance, 2)} feet!");
 
         }
     }
-    private static void CpuHitDirectionCalculator(ref int fenceDistance, int fenceDistanceL, int fenceDistanceC, int fenceDistanceR, double cpuDirectionLOdds, double cpuDirectionROdds)
-    {
 
-        if (cpuDirectionLOdds >= 165 && cpuDirectionROdds < 165)
-        {
-            fenceDistance = fenceDistanceL;
-        }
-        else if (cpuDirectionROdds >= 165 && cpuDirectionLOdds < 165)
-        {
-            fenceDistance = fenceDistanceR;
-        }
-        else if (cpuDirectionLOdds >= 165 && cpuDirectionROdds >= 165)
-        {
-            if (cpuDirectionLOdds > cpuDirectionROdds)
-            {
-                fenceDistance = fenceDistanceL;
-            }
-            else if (cpuDirectionLOdds < cpuDirectionROdds)
-            {
-                fenceDistance = fenceDistanceR;
-            }
-            else
-            {
-                fenceDistance = fenceDistanceC;
-            }
-        }
-        else
-        {
-            fenceDistance = fenceDistanceC;
-        }
-    }
-    private static void UserHitDirectionCalculator(ref int fenceDistance, int fenceDistanceL, int fenceDistanceC, int fenceDistanceR, double directionLOdds, double directionROdds)
+    private static void HitDirectionCalculator(ref int fenceDistance, int fenceDistanceL, int fenceDistanceC, int fenceDistanceR, double hitterDirectionLOdds, double hitterDirectionROdds)
     {
-        if (directionLOdds >= 165 && directionROdds < 165)
+        if (hitterDirectionLOdds >= 165 && hitterDirectionROdds < 165)
         {
             fenceDistance = fenceDistanceL;
         }
-        else if (directionROdds >= 165 && directionLOdds < 165)
+        else if (hitterDirectionROdds >= 165 && hitterDirectionLOdds < 165)
         {
             fenceDistance = fenceDistanceR;
         }
-        else if (directionLOdds >= 165 && directionROdds >= 165)
+        else if (hitterDirectionLOdds >= 165 && hitterDirectionROdds >= 165)
         {
-            if (directionLOdds > directionROdds)
+            if (hitterDirectionLOdds > hitterDirectionROdds)
             {
                 fenceDistance = fenceDistanceL;
             }
-            else if (directionLOdds < directionROdds)
+            else if (hitterDirectionLOdds < hitterDirectionROdds)
             {
                 fenceDistance = fenceDistanceR;
             }
@@ -690,58 +559,26 @@ Longest home run= {Math.Round(cpuMaxDistance, 2)} feet!");
         }
     }
 
-    private static void WeatherEffects(string selectedWeatherType, ref double contactOdds, ref double powerOdds)
+    private static void WeatherEffects(string selectedWeatherType, ref double hitterContactOdds, ref double hitterPowerOdds)
     {
         if (selectedWeatherType == "rainy")
         {
-            powerOdds = powerOdds - 5;
-            contactOdds = contactOdds + 5;
+            hitterPowerOdds = hitterPowerOdds - 5;
+            hitterContactOdds = hitterContactOdds + 5;
         }
 
         if (selectedWeatherType == "sunny")
         {
-            powerOdds = powerOdds + 5;
-            contactOdds = contactOdds - 5;
+            hitterPowerOdds = hitterPowerOdds + 5;
+            hitterContactOdds = hitterContactOdds - 5;
         }
     }
-    private static void UserContactResults(ref bool contactMade, ref byte outCounter, double contactOdds, int fenceDistance, int fenceDistanceC, int fenceDistanceL, int fenceDistanceR, double homeRunCounter)
+    private static void ContactResults(ref bool hitterContactMade, ref byte hitterOutCounter, double hitterContactOdds, int fenceDistance, int fenceDistanceC, int fenceDistanceL, int fenceDistanceR, double hitterHomeRunCounter, ref double hitterSwingCount)
     {
-        if (contactOdds > 300)
+        if (hitterContactOdds > 300)
         {
-            contactMade = true;
-            Console.WriteLine(" ");
-            Console.Write("Swung on and drilled ");
-            if (fenceDistance == fenceDistanceC)
-            {
-                Console.WriteLine("to center field...");
-            }
-            if (fenceDistance == fenceDistanceL)
-            {
-                Console.WriteLine("to left field...");
-            }
-            if (fenceDistance == fenceDistanceR)
-            {
-                Console.WriteLine("to right field...");
-            }
-        }
-        //this is a strike
-        else
-        {
-            contactMade = false;
-            outCounter++;
-            Console.WriteLine(" ");
-            Console.WriteLine("Swung on and missed. He cannot be happy about that one.");
-            Console.WriteLine($"That is out number {outCounter.ToString()}.");
-            Console.WriteLine($"Score: {homeRunCounter.ToString()}");
-            Console.WriteLine(" ");
-        }
-    }
-    private static void CpuContactResults(ref bool cpuContactMade, ref byte cpuOutCounter, double cpuContactOdds, int fenceDistance, int fenceDistanceC, int fenceDistanceL, int fenceDistanceR, double cpuHomeRunCounter, ref double cpuSwingCount)
-    {
-        if (cpuContactOdds > 300)
-        {
-            cpuContactMade = true;
-            cpuSwingCount++;
+            hitterContactMade = true;
+            hitterSwingCount++;
             Console.WriteLine(" ");
             Console.Write("Swung on and drilled ");
             if (fenceDistance == fenceDistanceC)
@@ -759,15 +596,61 @@ Longest home run= {Math.Round(cpuMaxDistance, 2)} feet!");
         }
         else
         {
-            cpuContactMade = false;
-            cpuOutCounter++;
-            cpuSwingCount++;
+            hitterContactMade = false;
+            hitterOutCounter++;
+            hitterSwingCount++;
             Console.WriteLine(" ");
             Console.WriteLine("Swung on and missed. He cannot be happy about that one.");
-            Console.WriteLine($"That is out number {cpuOutCounter.ToString()}.");
-            Console.WriteLine($"Score: {cpuHomeRunCounter.ToString()}");
+            Console.WriteLine($"That is out number {hitterOutCounter.ToString()}.");
+            Console.WriteLine($"Score: {hitterHomeRunCounter.ToString()}");
             Console.WriteLine(" ");
 
+        }
+    }
+    public static void DistanceCalculator(double hitterPowerOdds, int fenceDistance, ref double hitterHomeRunCounter, ref byte hitterOutCounter, ref double hitterMaxDistance)
+    {
+        if (hitterPowerOdds >= fenceDistance)
+        {
+            hitterHomeRunCounter++;
+            Console.WriteLine("AND IT IS OUT OF HERE!");
+            Console.WriteLine($"That went {Math.Round(hitterPowerOdds, 2)} feet!");
+
+            if (hitterPowerOdds > 450 && hitterPowerOdds < 550)
+            {
+                Console.WriteLine("Wow! That was an absolute nuke!");
+            }
+
+            if (hitterPowerOdds > 550)
+            {
+                Console.WriteLine("I don't think that's humanly possible. You might have a random drug test coming your way.");
+            }
+
+            Console.WriteLine(" ");
+            Console.WriteLine($"Score: {hitterHomeRunCounter.ToString()}");
+
+            if (hitterOutCounter == 1)
+            {
+                Console.WriteLine($"And there is still only {hitterOutCounter.ToString()} out.");
+            }
+            else
+            {
+                Console.WriteLine($"And there are still {hitterOutCounter.ToString()} outs.");
+            }
+
+            Console.WriteLine(" ");
+            if (hitterPowerOdds > hitterMaxDistance)
+            {
+                hitterMaxDistance = hitterPowerOdds;
+            }
+        }
+
+
+        else if (hitterPowerOdds < fenceDistance)
+        {
+            Console.WriteLine("... and it dies out before the wall. That's an out.");
+            hitterOutCounter++;
+            Console.WriteLine($"That is out number {hitterOutCounter.ToString()}.");
+            Console.WriteLine($"Score: {hitterHomeRunCounter.ToString()}");
         }
     }
 }
