@@ -132,6 +132,7 @@ class Game{
             {
                 index = int.Parse(input) - 1;
             }
+        
 
             //user entered a number outside of the array list
             else
@@ -358,15 +359,29 @@ Longest home run= {Math.Round(cpuMaxDistance, 2)} feet!");
             //declaring a winner
             WinnerDeclaration(batterSelectionName, cpuSelectionName, homeRunCounter, cpuHomeRunCounter);
 
+            bool exitStatus = false;
 
+            while (!exitStatus){
+            try{
             Console.WriteLine(" ");
-            Console.WriteLine("Press Y to play again or any other key to exit.");
+            Console.WriteLine("Press Y to play again or N to exit.");
             Console.WriteLine(" ");
             string playAgain = Console.ReadLine().ToLower().Trim();
-            if (playAgain != "y")
+            if (playAgain == "y"){
+                break;
+                mainMenu(batters);
+            }
+            if (playAgain == "n")
             {
+                exitStatus=true;
                 Console.WriteLine("Thanks for playing. Goodbye!");
                 gameOver = true;
+            }
+            } 
+            catch (Exception ex){
+            Console.WriteLine("Invalid Selection. Press 'N' to exit or 'Y' to play again");
+                continue;
+            }  
             }
         
         }
